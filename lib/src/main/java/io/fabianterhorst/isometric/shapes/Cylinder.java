@@ -16,9 +16,12 @@ import io.fabianterhorst.isometric.paths.Circle;
 
 public class Cylinder extends Shape {
 
-    public Cylinder(Point origin, Double radius, double vertices, double height) {
+    public Cylinder(Point origin, double vertices, double height) {
+        this(origin, 1, vertices, height);
+    }
+
+    public Cylinder(Point origin, double radius, double vertices, double height) {
         super();
-        radius = radius != null ? radius : 1;
         Circle circle = new Circle(origin, radius, vertices);
         extrudePath(circle, height);
     }
