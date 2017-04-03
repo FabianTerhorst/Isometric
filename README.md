@@ -35,8 +35,11 @@ isometricView.add(new Path(new Point[]{
 
 ### How the grid looks like
 
-
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotGrid.png?raw=true)
+
+### Supports complex structures
+
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotThree.png?raw=true)
 
 # Include in your project
 ## Using Maven
