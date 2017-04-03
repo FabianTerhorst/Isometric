@@ -7,7 +7,7 @@ Isometric drawing library for Android
 isometricView.add(new Prism(new Point(0, 0, 0)), new Color(33, 150, 243));
 ```
 
-![Image](https://raw.githubusercontent.com/fabianterhorst/isometric/master/asset/sample_1.png)
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotOne.png?raw=true)
 
 ### Drawing multiple Shapes
 
@@ -17,7 +17,7 @@ isometricView.add(new Prism(new Point(-1, 1, 0), 1, 2, 1), new Color(33, 150, 24
 isometricView.add(new Prism(new Point(1, -1, 0), 2, 1, 1), new Color(33, 150, 243));
 ```
 
-![Image](https://raw.githubusercontent.com/fabianterhorst/isometric/master/asset/sample_2.png)
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotTwo.png?raw=true)
 
 # Include in your project
 ## Using Maven
