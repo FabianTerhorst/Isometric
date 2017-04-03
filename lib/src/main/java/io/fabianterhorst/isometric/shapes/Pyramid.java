@@ -10,12 +10,12 @@ import io.fabianterhorst.isometric.Shape;
 
 public class Pyramid extends Shape {
 
-    public Pyramid(Point origin, Double dx, Double dy, Double dz) {
-        super();
-        dx = dx != null ? dx : 1.0;
-        dy = dy != null ? dy : 1.0;
-        dz = dz != null ? dz : 1.0;
+    public Pyramid(Point origin) {
+        this(origin, 1, 1, 1);
+    }
 
+    public Pyramid(Point origin, double dx, double dy, double dz) {
+        super();
   /* Path parallel to the x-axis */
         Path face1 = new Path(new Point[]{
                 origin,
