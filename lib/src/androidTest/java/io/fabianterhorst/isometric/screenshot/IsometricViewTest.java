@@ -56,8 +56,8 @@ public class IsometricViewTest {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         sampleThree(0, view);
         ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(540)
+                .setExactWidthPx(820)
+                .setExactHeightPx(680)
                 .layout();
         Screenshot.snap(view)
                 .record();
