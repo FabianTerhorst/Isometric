@@ -1,6 +1,21 @@
 # Isometric
 Isometric drawing library for Android
 
+### Add the library
+### build.gradle file (currently required until its been published at jcenter)
+```groovy
+repositories {
+    maven {
+        url  "http://dl.bintray.com/fabianterhorst/maven" 
+    }
+}
+```
+
+### app.gradle file
+```groovy
+compile 'io.fabianterhorst:Isometric:0.0.1'
+```
+
 ### Drawing a simple cube
 
 ```java
