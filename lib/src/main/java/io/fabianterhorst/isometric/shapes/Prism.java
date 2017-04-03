@@ -10,11 +10,12 @@ import io.fabianterhorst.isometric.Shape;
 
 public class Prism extends Shape {
 
-    public Prism(Point origin, Double dx, Double dy, Double dz) {
+    public Prism(Point origin) {
+        this(origin, 1, 1, 1);
+    }
+
+    public Prism(Point origin, double dx, double dy, double dz) {
         super();
-        dx = dx != null ? dx : 1;
-        dy = dy != null ? dy : 1;
-        dz = dz != null ? dz : 1;
 
         /* Squares parallel to the x-axis */
         Path face1 = new Path(new Point[]{
