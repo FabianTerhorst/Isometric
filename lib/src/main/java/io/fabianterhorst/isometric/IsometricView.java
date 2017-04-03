@@ -26,6 +26,10 @@ public class IsometricView extends View {
         this.sort = sort;
     }
 
+    public void clear() {
+        isometric.clear();
+    }
+
     public void add(Path path, Color color) {
         isometric.add(path, color);
     }

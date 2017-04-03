@@ -11,6 +11,7 @@ import java.util.List;
  * Created by fabianterhorst on 31.03.17.
  */
 
+//Todo: implement item ids to reuse objects for animations
 public class Isometric {
 
     private final double angle, scale;
@@ -80,6 +81,10 @@ public class Isometric {
         for (int j = 0; j < paths.size(); j++) {
             addPath(paths.get(j), color);
         }
+    }
+
+    public void clear() {
+        items.clear();
     }
 
     private void addPath(Path path, Color color) {
@@ -296,6 +301,7 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn = 0;
+        boolean updated = false;
         List<Point> transformedPoints = new ArrayList<>();
         android.graphics.Path drawPath = new android.graphics.Path();
 
