@@ -1,3 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.fabianterhorst.isometric">
-
-</manifest>
+<manifest package="io.fabianterhorst.isometric" />
