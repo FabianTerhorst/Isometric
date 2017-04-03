@@ -305,7 +305,9 @@ public class Isometric {
         android.graphics.Path drawPath = new android.graphics.Path();
 
         Item(Path path, Color baseColor) {
-            this.paint = new Paint();
+            this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            this.paint.setStrokeWidth(1);
             this.path = path;
             this.baseColor = baseColor;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
