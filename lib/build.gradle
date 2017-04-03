@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.0.2"
 
     }
     buildTypes {
@@ -26,7 +26,7 @@ android {
 def siteUrl = 'https://github.com/FabianTerhorst/Isometric'
 def gitUrl = 'https://github.com/FabianTerhorst/Isometric.git'
 
-version = "0.0.1"
+version = "0.0.2"
 group = "io.fabianterhorst"
 
 install {

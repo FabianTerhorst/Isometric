@@ -29,5 +29,5 @@ repositories {
     }
 }
 ...
-compile 'io.fabianterhorst:Isometric:0.0.1'
+compile 'io.fabianterhorst:Isometric:0.0.2'
 ```
