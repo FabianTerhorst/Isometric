@@ -9,6 +9,7 @@ import io.fabianterhorst.isometric.Point;
 
 public class Circle extends Path {
 
+    @Deprecated
     public Circle(Point origin, double radius) {
         this(origin, radius, 20);
     }
