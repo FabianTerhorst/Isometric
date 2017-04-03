@@ -27,6 +27,14 @@ public class Shape {
         this.paths.add(path);
     }
 
+    public void push(List<Path> paths) {
+        this.paths.addAll(paths);
+    }
+
+    public List<Path> getPaths() {
+        return paths;
+    }
+
     public Shape translate(double dx, double dy, double dz) {
         List<Path> paths = new ArrayList<>();
         for (Path path : this.paths) {
@@ -67,9 +75,15 @@ public class Shape {
         return new Shape(paths);
     }
 
-    public void scalePaths(Point origin, double dx, double dy, double dz) {
+    public void scalePaths(Point origin, Double dx, Double dy, Double dz) {
         for (int i = 0, length = paths.size();i < length;i++) {
             paths.set(i, paths.get(i).scale(origin, dx, dy, dz));
+        }
+    }
+
+    public void translatePaths(double dx, double dy, double dz) {
+        for (int i = 0, length = paths.size();i < length;i++) {
+            paths.set(i, paths.get(i).translate(dx, dy, dz));
         }
     }
 
