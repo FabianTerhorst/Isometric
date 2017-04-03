@@ -59,7 +59,7 @@ public class Shape {
         return new Shape(paths);
     }
 
-    public Shape scale(Point origin, double dx, double dy, double dz) {
+    public Shape scale(Point origin, Double dx, Double dy, Double dz) {
         List<Path> paths = new ArrayList<>();
         for (Path path : this.paths) {
             paths.add(path.scale(origin, dx, dy, dz));

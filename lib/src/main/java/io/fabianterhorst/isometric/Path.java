@@ -75,7 +75,7 @@ public class Path {
         return new Path(points);
     }
 
-    public Path scale(Point origin, double dx, double dy, double dz) {
+    public Path scale(Point origin, Double dx, Double dy, Double dz) {
         List<Point> points = new ArrayList<>();
         for (Point point : this.points) {
             points.add(point.scale(origin, dx, dy, dz));
