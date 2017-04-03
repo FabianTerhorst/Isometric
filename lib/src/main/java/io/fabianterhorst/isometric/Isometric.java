@@ -114,7 +114,7 @@ public class Isometric {
             }
 
             if (!item.drawPath.isEmpty()) {
-                item.drawPath.rewind();//Todo: test if .reset isn´ needed and rewind is enougth
+                item.drawPath.rewind();//Todo: test if .reset is not needed and rewind is enough
             }
 
             for (Point point : item.path.points) {
