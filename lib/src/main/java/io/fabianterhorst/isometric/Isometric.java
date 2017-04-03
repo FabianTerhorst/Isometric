@@ -301,7 +301,6 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn = 0;
-        boolean updated = false;
         List<Point> transformedPoints = new ArrayList<>();
         android.graphics.Path drawPath = new android.graphics.Path();
 
