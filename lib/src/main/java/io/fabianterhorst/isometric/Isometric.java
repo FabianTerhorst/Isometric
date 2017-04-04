@@ -278,19 +278,7 @@ public class Isometric {
                 }
             }
 
-            int i;
-            int j;
-            boolean result = false;
-            int length = items.size();
-            for (i = 0, j = length - 1; i < length; j = i++) {
-                Point polygonItemI = items.get(i);
-                Point polygonItemJ = items.get(j);
-                if ((polygonItemI.y > position.y) != (polygonItemJ.y > position.y) &&
-                        (position.x < (polygonItemJ.x - polygonItemI.x) * (position.y - polygonItemI.y) / (polygonItemJ.y - polygonItemI.y) + polygonItemI.x)) {
-                    result = !result;
-                }
-            }
-            if (result) {
+            if (isPointInPoly(items, position)) {
                 return item;
             }
         }
