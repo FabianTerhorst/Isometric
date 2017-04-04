@@ -47,7 +47,7 @@ isometricView.add(new Path(new Point[]{
 # Include in your project
 ## Using JCenter
 ```groovy
-compile 'io.fabianterhorst:Isometric:0.0.2'
+compile 'io.fabianterhorst:Isometric:0.0.3'
 ```
 
 ### Translate
