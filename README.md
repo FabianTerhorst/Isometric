@@ -42,14 +42,7 @@ isometricView.add(new Path(new Point[]{
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotThree.png?raw=true)
 
 # Include in your project
-## Using Maven
-#### build.gradle file (currently required until its been published at jcenter)
+## Using JCenter
 ```groovy
-repositories {
-    maven {
-        url  "http://dl.bintray.com/fabianterhorst/maven" 
-    }
-}
-...
 compile 'io.fabianterhorst:Isometric:0.0.2'
 ```
