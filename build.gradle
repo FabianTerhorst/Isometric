@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        if(project.hasProperty('buildCMD')){
+        if (project.hasProperty('buildCMD')) {
             classpath 'com.android.tools.build:gradle:2.3.0'
         } else {
             classpath 'com.android.tools.build:gradle:2.4.0-alpha4'
