@@ -68,6 +68,11 @@ public class IsometricView extends View {
     }
 
     @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             return true;
@@ -76,6 +81,7 @@ public class IsometricView extends View {
             if (item != null) {
                 Log.d("item", "found");
             }
+            performClick();
         }
         return super.onTouchEvent(event);
     }
