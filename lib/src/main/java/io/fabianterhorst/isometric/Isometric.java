@@ -206,6 +206,7 @@ public class Isometric {
 
     @Nullable
     public Item findItemForPosition(Point position) {
+        //Todo: reverse sorting for click detection, because hidden object is getting drawed first und will be returned as the first as well
         //Items are already sorted for depth sort so break should not be a problem here
         for (Item item : this.items) {
             List<Point> items = new ArrayList<>();
@@ -317,9 +318,10 @@ public class Isometric {
     private boolean isPointInPoly(List<Point> poly, Point pt) {
         boolean c = false;
         for (int i = -1, l = poly.size(), j = l - 1; ++i < l; j = i) {
-            boolean bla = ((poly.get(i).y <= pt.y && pt.y < poly.get(j).y) || (poly.get(j).y <= pt.y && pt.y < poly.get(i).y))
-                    && (pt.x < (poly.get(j).x - poly.get(i).x) * (pt.y - poly.get(i).y) / (poly.get(j).y - poly.get(i).y) + poly.get(i).x)
-                    && (c = !c);
+            if (((poly.get(i).y <= pt.y && pt.y < poly.get(j).y) || (poly.get(j).y <= pt.y && pt.y < poly.get(i).y))
+                    && (pt.x < (poly.get(j).x - poly.get(i).x) * (pt.y - poly.get(i).y) / (poly.get(j).y - poly.get(i).y) + poly.get(i).x)) {
+                c = !c;
+            }
         }
         return c;
     }
