@@ -58,3 +58,5 @@ Prism prism = new Prism(new Point(0, 0, 0));
 isometricView.add(prism, new Color(33, 150, 243));
 isometricView.add(prism.translate(0, 0, 1.1), new Color(33, 150, 243));
 ```
+
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotTranslate.png?raw=true)

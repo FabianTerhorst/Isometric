@@ -87,6 +87,18 @@ public class IsometricViewTest {
                 .record();
     }
 
+    @Test
+    public void doScreenshotTranslate() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        translate(view);
+        ViewHelpers.setupView(view)
+                .setExactWidthPx(680)
+                .setExactHeightPx(540)
+                .layout();
+        Screenshot.snap(view)
+                .record();
+    }
+
     public void grid(IsometricView isometricView) {
         for (int x = 0; x < 10; x++) {
             isometricView.add(new Path(new Point[]{
@@ -146,5 +158,11 @@ public class IsometricViewTest {
         isometricView.add(new Pyramid(new Point(2, 1, 3)).scale(new Point(2, 1, 3), 0.5, null, null), new Color(40, 180, 40));
         isometricView.add(new Prism(new Point(3, 2, 3), 1, 1, 0.2), new Color(50, 50, 50));
         isometricView.add(new Octahedron(new Point(3, 2, 3.2)).rotateZ(new Point(3.5, 2.5, 0), angle), new Color(0, 180, 180));
+    }
+
+    public void translate(IsometricView isometricView) {
+        Prism prism = new Prism(new Point(0, 0, 0));
+        isometricView.add(prism, new Color(33, 150, 243));
+        isometricView.add(prism.translate(0, 0, 1.1), new Color(33, 150, 243));
     }
 }
