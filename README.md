@@ -4,7 +4,7 @@ Isometric drawing library for Android
 ### Drawing a simple cube
 
 ```java
-isometricView.add(new Prism(new Point(0, 0, 0)), new Color(33, 150, 243));
+isometricView.add(new Prism(new Point(/* x */ 0, /* y */ 0, /* z */ 0), /* width */ 1, /* length */ 1, /* height */ 1), new Color(33, 150, 243));
 ```
 
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotOne.png?raw=true)
