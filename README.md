@@ -100,3 +100,19 @@ isometricView.add(cube
 ```
 
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotRotateZ.png?raw=true)
+
+### Shapes from Paths
+#### The method ```Shape.extrude``` allows you to create a 3D model by popping out a 2D path along the z-axis.
+
+```java
+Color blue = new Color(50, 60, 160);
+Color red = new Color(160, 60, 50);
+isometricView.add(new Prism(Point.ORIGIN, 3, 3, 1), blue);
+isometricView.add(Shape.extrude(new Path(new Point[]{
+	new Point(1, 1, 1),
+	new Point(2, 1, 1),
+	new Point(2, 3, 1)
+}), 0.3), red);
+```
+
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotExtrude.png?raw=true)

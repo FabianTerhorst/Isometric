@@ -13,6 +13,7 @@ import io.fabianterhorst.isometric.Color;
 import io.fabianterhorst.isometric.IsometricView;
 import io.fabianterhorst.isometric.Path;
 import io.fabianterhorst.isometric.Point;
+import io.fabianterhorst.isometric.Shape;
 import io.fabianterhorst.isometric.shapes.Octahedron;
 import io.fabianterhorst.isometric.shapes.Prism;
 import io.fabianterhorst.isometric.shapes.Pyramid;
@@ -123,6 +124,18 @@ public class IsometricViewTest {
                 .record();
     }
 
+    @Test
+    public void doScreenshotExtrude() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        extrude(view);
+        ViewHelpers.setupView(view)
+                .setExactWidthPx(680)
+                .setExactHeightPx(440)
+                .layout();
+        Screenshot.snap(view)
+                .record();
+    }
+
     public void grid(IsometricView isometricView) {
         for (int x = 0; x < 10; x++) {
             isometricView.add(new Path(new Point[]{
@@ -212,5 +225,16 @@ public class IsometricViewTest {
                 /* (1.5, 1.5) is the center of the prism */
                 .rotateZ(new Point(1.5, 1.5, 0), Math.PI / 12)
                 .translate(0, 0, 1.1), blue);
+    }
+
+    public void extrude(IsometricView isometricView) {
+        Color blue = new Color(50, 60, 160);
+        Color red = new Color(160, 60, 50);
+        isometricView.add(new Prism(Point.ORIGIN, 3, 3, 1), blue);
+        isometricView.add(Shape.extrude(new Path(new Point[]{
+                new Point(1, 1, 1),
+                new Point(2, 1, 1),
+                new Point(2, 3, 1)
+        }), 0.3), red);
     }
 }
