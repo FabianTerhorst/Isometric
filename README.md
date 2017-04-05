@@ -60,7 +60,7 @@ compile 'io.fabianterhorst:Isometric:0.0.3'
 #### [Cylinder](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Cylinder.java), [Knot](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Knot.java), [Octahedron](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Octahedron.java), [Prism](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Prism.java), [Pyramid](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Pyramid.java) and [Stairs](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Stairs.java)
 
 ### Translate
-#### Traslate is translating an point, path and shape to the given x, y and z distance. Translate is returning a new point, path or shape.
+#### Traslate is translating an point, path or shape to the given x, y and z distance. Translate is returning a new point, path or shape.
 
 ```java
 Prism prism = new Prism(new Point(0, 0, 0));
@@ -69,3 +69,18 @@ isometricView.add(prism.translate(0, 0, 1.1), new Color(33, 150, 243));
 ```
 
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotTranslate.png?raw=true)
+
+### Scale
+#### Scale is scaling an point, path or shape with the given x, y and z scaling factors. Scale is returning a new point, path or shape.
+
+```java
+Color blue = new Color(50, 60, 160);
+Color red = new Color(160, 60, 50);
+Prism cube = new Prism(Point.ORIGIN);
+isometricView.add(cube.scale(Point.ORIGIN, 3.0, 3.0, 0.5), red);
+isometricView.add(cube
+	.scale(Point.ORIGIN, 3.0, 3.0, 0.5)
+    .translate(0, 0, 0.6), blue);
+```
+
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotScale.png?raw=true)

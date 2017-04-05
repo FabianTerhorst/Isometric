@@ -99,6 +99,18 @@ public class IsometricViewTest {
                 .record();
     }
 
+    @Test
+    public void doScreenshotScale() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        scale(view);
+        ViewHelpers.setupView(view)
+                .setExactWidthPx(680)
+                .setExactHeightPx(440)
+                .layout();
+        Screenshot.snap(view)
+                .record();
+    }
+
     public void grid(IsometricView isometricView) {
         for (int x = 0; x < 10; x++) {
             isometricView.add(new Path(new Point[]{
@@ -164,5 +176,15 @@ public class IsometricViewTest {
         Prism prism = new Prism(new Point(0, 0, 0));
         isometricView.add(prism, new Color(33, 150, 243));
         isometricView.add(prism.translate(0, 0, 1.1), new Color(33, 150, 243));
+    }
+
+    public void scale(IsometricView isometricView) {
+        Color blue = new Color(50, 60, 160);
+        Color red = new Color(160, 60, 50);
+        Prism cube = new Prism(Point.ORIGIN);
+        isometricView.add(cube.scale(Point.ORIGIN, 3.0, 3.0, 0.5), red);
+        isometricView.add(cube
+                .scale(Point.ORIGIN, 3.0, 3.0, 0.5)
+                .translate(0, 0, 0.6), blue);
     }
 }
