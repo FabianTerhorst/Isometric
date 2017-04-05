@@ -80,7 +80,23 @@ Prism cube = new Prism(Point.ORIGIN);
 isometricView.add(cube.scale(Point.ORIGIN, 3.0, 3.0, 0.5), red);
 isometricView.add(cube
 	.scale(Point.ORIGIN, 3.0, 3.0, 0.5)
-    .translate(0, 0, 0.6), blue);
+	.translate(0, 0, 0.6), blue);
 ```
 
 ![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotScale.png?raw=true)
+
+### RotateZ
+#### RotateZ is rotating an point, path or shape with the given angle in radians on the xy-plane (where an angle of 0 runs along the position x-axis). RotateZ is returning a new point, path or shape.
+
+```java
+Color blue = new Color(50, 60, 160);
+Color red = new Color(160, 60, 50);
+Prism cube = new Prism(Point.ORIGIN, 3, 3, 1);
+isometricView.add(cube, red);
+isometricView.add(cube
+	/* (1.5, 1.5) is the center of the prism */
+	.rotateZ(new Point(1.5, 1.5, 0), Math.PI / 12)
+	.translate(0, 0, 1.1), blue);
+```
+
+![Image](https://github.com/FabianTerhorst/Isometric/blob/master/lib/screenshots/io.fabianterhorst.isometric.screenshot.IsometricViewTest_doScreenshotRotateZ.png?raw=true)

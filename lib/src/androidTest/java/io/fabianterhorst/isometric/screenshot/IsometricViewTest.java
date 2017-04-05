@@ -111,6 +111,18 @@ public class IsometricViewTest {
                 .record();
     }
 
+    @Test
+    public void doScreenshotRotateZ() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        rotateZ(view);
+        ViewHelpers.setupView(view)
+                .setExactWidthPx(680)
+                .setExactHeightPx(440)
+                .layout();
+        Screenshot.snap(view)
+                .record();
+    }
+
     public void grid(IsometricView isometricView) {
         for (int x = 0; x < 10; x++) {
             isometricView.add(new Path(new Point[]{
@@ -186,5 +198,16 @@ public class IsometricViewTest {
         isometricView.add(cube
                 .scale(Point.ORIGIN, 3.0, 3.0, 0.5)
                 .translate(0, 0, 0.6), blue);
+    }
+
+    public void rotateZ(IsometricView isometricView) {
+        Color blue = new Color(50, 60, 160);
+        Color red = new Color(160, 60, 50);
+        Prism cube = new Prism(Point.ORIGIN, 3, 3, 1);
+        isometricView.add(cube, red);
+        isometricView.add(cube
+                /* (1.5, 1.5) is the center of the prism */
+                .rotateZ(new Point(1.5, 1.5, 0), Math.PI / 12)
+                .translate(0, 0, 1.1), blue);
     }
 }
