@@ -102,12 +102,15 @@ public class Shape {
     }
 
     public static Shape extrude(Path path, @Nullable Double height) {
+        return extrude(new Shape(), path, height);
+    }
+
+    public static Shape extrude(Shape shape, Path path, @Nullable Double height) {
         height = height != null ? height : 1;
 
         Path topPath = path.translate(0, 0, height);
         int i;
         int length = path.points.size();
-        Shape shape = new Shape();
 
         /* Push the top and bottom faces, top face must be oriented correctly */
         shape.push(path.reverse());
