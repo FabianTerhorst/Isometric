@@ -33,7 +33,7 @@ public class IsometricViewTest {
         sampleOne(view);
         ViewHelpers.setupView(view)
                 .setExactWidthPx(680)
-                .setExactHeightPx(540)
+                .setExactHeightPx(320)
                 .layout();
         Screenshot.snap(view)
                 .record();
