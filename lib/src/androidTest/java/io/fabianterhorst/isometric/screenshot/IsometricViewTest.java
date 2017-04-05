@@ -93,7 +93,7 @@ public class IsometricViewTest {
         translate(view);
         ViewHelpers.setupView(view)
                 .setExactWidthPx(680)
-                .setExactHeightPx(540)
+                .setExactHeightPx(440)
                 .layout();
         Screenshot.snap(view)
                 .record();
@@ -185,9 +185,12 @@ public class IsometricViewTest {
     }
 
     public void translate(IsometricView isometricView) {
-        Prism prism = new Prism(new Point(0, 0, 0));
-        isometricView.add(prism, new Color(33, 150, 243));
-        isometricView.add(prism.translate(0, 0, 1.1), new Color(33, 150, 243));
+        Color blue = new Color(50, 60, 160);
+        Color red = new Color(160, 60, 50);
+        Prism cube = new Prism(new Point(0, 0, 0));
+        isometricView.add(cube, red);
+        isometricView.add(cube.translate(0, 0, 1.1), blue);
+        isometricView.add(cube.translate(0, 0, 2.2), red);
     }
 
     public void scale(IsometricView isometricView) {
