@@ -14,6 +14,7 @@ import io.fabianterhorst.isometric.IsometricView;
 import io.fabianterhorst.isometric.Path;
 import io.fabianterhorst.isometric.Point;
 import io.fabianterhorst.isometric.Shape;
+import io.fabianterhorst.isometric.shapes.Cylinder;
 import io.fabianterhorst.isometric.shapes.Octahedron;
 import io.fabianterhorst.isometric.shapes.Prism;
 import io.fabianterhorst.isometric.shapes.Pyramid;
@@ -136,6 +137,18 @@ public class IsometricViewTest {
                 .record();
     }
 
+    @Test
+    public void doScreenshotCylinder() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        cylinder(view);
+        ViewHelpers.setupView(view)
+                .setExactWidthPx(680)
+                .setExactHeightPx(440)
+                .layout();
+        Screenshot.snap(view)
+                .record();
+    }
+
     public void grid(IsometricView isometricView) {
         for (int x = 0; x < 10; x++) {
             isometricView.add(new Path(new Point[]{
@@ -236,5 +249,10 @@ public class IsometricViewTest {
                 new Point(2, 1, 1),
                 new Point(2, 3, 1)
         }), 0.3), red);
+    }
+
+    public void cylinder(IsometricView isometricView) {
+        Color blue = new Color(50, 60, 160);
+        isometricView.add(new Cylinder(new Point(1, 1, 1), 30, 1), blue);
     }
 }
