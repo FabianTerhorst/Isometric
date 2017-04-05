@@ -50,6 +50,9 @@ isometricView.add(new Path(new Point[]{
 compile 'io.fabianterhorst:Isometric:0.0.3'
 ```
 
+### Available Shapes
+#### [Cylinder](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Cylinder.java), [Knot](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Knot.java), [Octahedron](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Octahedron.java), [Prism](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Prism.java), [Pyramid](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Pyramid.java) and [Stairs](https://github.com/FabianTerhorst/Isometric/blob/master/lib/src/main/java/io/fabianterhorst/isometric/shapes/Stairs.java)
+
 ### Translate
 #### Traslate is translating an point, path and shape to the given x, y and z distance. Translate is returning a new point, path or shape.
 
