@@ -1,10 +1,6 @@
 package io.fabianterhorst.isometric.screenshot;
 
-import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.facebook.testing.screenshot.Screenshot;
-import com.facebook.testing.screenshot.ViewHelpers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,138 +11,133 @@ import io.fabianterhorst.isometric.Path;
 import io.fabianterhorst.isometric.Point;
 import io.fabianterhorst.isometric.Shape;
 import io.fabianterhorst.isometric.shapes.Cylinder;
+import io.fabianterhorst.isometric.shapes.Knot;
 import io.fabianterhorst.isometric.shapes.Octahedron;
 import io.fabianterhorst.isometric.shapes.Prism;
 import io.fabianterhorst.isometric.shapes.Pyramid;
 import io.fabianterhorst.isometric.shapes.Stairs;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static io.fabianterhorst.isometric.screenshot.util.ScreenshotHelper.measureAndScreenshotView;
 
 /**
  * Created by fabianterhorst on 03.04.17.
  */
 
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class IsometricViewTest {
+
+    private static final Color BLUE = new Color(50, 60, 160);
+    private static final Color GREEN = new Color(50, 160, 60);
+    private static final Color RED = new Color(160, 60, 50);
+    private static final Color TEAL = new Color(0, 180, 180);
+    private static final Color YELLOW = new Color(180, 180, 0);
+    private static final Color LIGHT_GREEN = new Color(40, 180, 40);
+    private static final Color PURPLE = new Color(180, 0, 180);
+
     @Test
     public void doScreenshotOne() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         sampleOne(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(220)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 220);
     }
 
     @Test
     public void doScreenshotTwo() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         sampleTwo(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(540)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 540);
     }
 
     @Test
     public void doScreenshotThree() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         sampleThree(0, view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(820)
-                .setExactHeightPx(680)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 820, 680);
     }
 
     @Test
     public void doScreenshotGrid() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         grid(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(540)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 540);
     }
 
     @Test
     public void doScreenshotPath() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         path(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
     }
 
     @Test
     public void doScreenshotTranslate() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         translate(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
     }
 
     @Test
     public void doScreenshotScale() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         scale(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
     }
 
     @Test
     public void doScreenshotRotateZ() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         rotateZ(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
     }
 
     @Test
     public void doScreenshotExtrude() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         extrude(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
     }
 
     @Test
     public void doScreenshotCylinder() {
         IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
         cylinder(view);
-        ViewHelpers.setupView(view)
-                .setExactWidthPx(680)
-                .setExactHeightPx(440)
-                .layout();
-        Screenshot.snap(view)
-                .record();
+        measureAndScreenshotView(view, 680, 440);
+    }
+
+    @Test
+    public void doScreenshotKnot() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        knot(view);
+        measureAndScreenshotView(view, 680, 440);
+    }
+
+    @Test
+    public void doScreenshotOctahedron() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        octahedron(view);
+        measureAndScreenshotView(view, 680, 440);
+    }
+
+    @Test
+    public void doScreenshotPrism() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        prism(view);
+        measureAndScreenshotView(view, 680, 440);
+    }
+
+    @Test
+    public void doScreenshotPyramid() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        pyramid(view);
+        measureAndScreenshotView(view, 680, 440);
+    }
+
+    @Test
+    public void doScreenshotStairs() {
+        IsometricView view = new IsometricView(getInstrumentation().getTargetContext());
+        stairs(view);
+        measureAndScreenshotView(view, 680, 440);
     }
 
     public void grid(IsometricView isometricView) {
@@ -187,8 +178,8 @@ public class IsometricViewTest {
     }
 
     public void sampleTwo(IsometricView isometricView) {
-        isometricView.add(new Prism(new Point(0, 0, 0), 4, 4, 2), new Color(33, 150, 243));
-        isometricView.add(new Prism(new Point(-1, 1, 0), 1, 2, 1), new Color(33, 150, 243));
+        isometricView.add(new Prism(new Point(0, 0, 0), 4, 4, 2), GREEN);
+        isometricView.add(new Prism(new Point(-1, 1, 0), 1, 2, 1), PURPLE);
         isometricView.add(new Prism(new Point(1, -1, 0), 2, 1, 1), new Color(33, 150, 243));
     }
 
@@ -252,7 +243,26 @@ public class IsometricViewTest {
     }
 
     public void cylinder(IsometricView isometricView) {
-        Color blue = new Color(50, 60, 160);
-        isometricView.add(new Cylinder(new Point(1, 1, 1), 30, 1), blue);
+        isometricView.add(new Cylinder(new Point(1, 1, 1), 30, 1), BLUE);
+    }
+
+    public void knot(IsometricView isometricView) {
+        isometricView.add(new Knot(new Point(1, 1, 1)), GREEN);
+    }
+
+    public void octahedron(IsometricView isometricView) {
+        isometricView.add(new Octahedron(new Point(1, 1, 1)), RED);
+    }
+
+    public void prism(IsometricView isometricView) {
+        isometricView.add(new Prism(new Point(1, 1, 1)), YELLOW);
+    }
+
+    public void pyramid(IsometricView isometricView) {
+        isometricView.add(new Pyramid(new Point(1, 1, 1)), TEAL);
+    }
+
+    public void stairs(IsometricView isometricView) {
+        isometricView.add(new Stairs(new Point(1, 1, 1), 10), LIGHT_GREEN);
     }
 }
