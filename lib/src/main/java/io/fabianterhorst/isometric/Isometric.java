@@ -203,6 +203,7 @@ public class Isometric {
         //Todo: reverse sorting for click detection, because hidden object is getting drawed first und will be returned as the first as well
         //Items are already sorted for depth sort so break should not be a problem here
         for (Item item : this.items) {
+            if (item.transformedPoints == null) continue;
             List<Point> items = new ArrayList<>();
             Point top = null,
                     bottom = null,
@@ -297,7 +298,6 @@ public class Isometric {
         }
 
         Item(Path path, Color baseColor) {
-            //transformedPoints = new ArrayList<>();
             drawPath = new android.graphics.Path();
             drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
