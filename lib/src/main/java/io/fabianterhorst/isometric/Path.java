@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Path {
 
+    //Todo: replace with Point[]
     final List<Point> points;
 
     public Path() {
@@ -75,10 +76,26 @@ public class Path {
         return new Path(points);
     }
 
-    public Path scale(Point origin, Double dx, Double dy, Double dz) {
+    public Path scale(Point origin, double dx, double dy, double dz) {
         List<Point> points = new ArrayList<>();
         for (Point point : this.points) {
             points.add(point.scale(origin, dx, dy, dz));
+        }
+        return new Path(points);
+    }
+
+    public Path scale(Point origin, double dx, double dy) {
+        List<Point> points = new ArrayList<>();
+        for (Point point : this.points) {
+            points.add(point.scale(origin, dx, dy));
+        }
+        return new Path(points);
+    }
+
+    public Path scale(Point origin, double dx) {
+        List<Point> points = new ArrayList<>();
+        for (Point point : this.points) {
+            points.add(point.scale(origin, dx));
         }
         return new Path(points);
     }

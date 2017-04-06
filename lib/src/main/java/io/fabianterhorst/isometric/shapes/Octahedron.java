@@ -19,6 +19,6 @@ public class Octahedron extends Shape {
             push(upperTriangle.rotateZ(center, i * Math.PI / 2.0));
             push(lowerTriangle.rotateZ(center, i * Math.PI / 2.0));
         }
-        scalePaths(center, Math.sqrt(2) / 2.0, Math.sqrt(2) / 2.0, 1.0);
+        scalePaths(center, Math.sqrt(2) / 2.0, Math.sqrt(2) / 2.0, 1);
     }
 }

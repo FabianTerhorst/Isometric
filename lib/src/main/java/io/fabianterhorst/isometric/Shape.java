@@ -1,7 +1,5 @@
 package io.fabianterhorst.isometric;
 
-import android.support.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -67,7 +65,7 @@ public class Shape {
         return new Shape(paths);
     }
 
-    public Shape scale(Point origin, Double dx, Double dy, Double dz) {
+    public Shape scale(Point origin, double dx, double dy, double dz) {
         List<Path> paths = new ArrayList<>();
         for (Path path : this.paths) {
             paths.add(path.scale(origin, dx, dy, dz));
@@ -75,9 +73,37 @@ public class Shape {
         return new Shape(paths);
     }
 
-    public void scalePaths(Point origin, Double dx, Double dy, Double dz) {
+    public Shape scale(Point origin, double dx, double dy) {
+        List<Path> paths = new ArrayList<>();
+        for (Path path : this.paths) {
+            paths.add(path.scale(origin, dx, dy));
+        }
+        return new Shape(paths);
+    }
+
+    public Shape scale(Point origin, double dx) {
+        List<Path> paths = new ArrayList<>();
+        for (Path path : this.paths) {
+            paths.add(path.scale(origin, dx));
+        }
+        return new Shape(paths);
+    }
+
+    public void scalePaths(Point origin, double dx, double dy, double dz) {
         for (int i = 0, length = paths.size();i < length;i++) {
             paths.set(i, paths.get(i).scale(origin, dx, dy, dz));
+        }
+    }
+
+    public void scalePaths(Point origin, double dx, double dy) {
+        for (int i = 0, length = paths.size();i < length;i++) {
+            paths.set(i, paths.get(i).scale(origin, dx, dy));
+        }
+    }
+
+    public void scalePaths(Point origin, double dx) {
+        for (int i = 0, length = paths.size();i < length;i++) {
+            paths.set(i, paths.get(i).scale(origin, dx));
         }
     }
 
@@ -101,13 +127,19 @@ public class Shape {
         return this.paths;
     }
 
-    public static Shape extrude(Path path, @Nullable Double height) {
+    public static Shape extrude(Path path) {
+        return extrude(new Shape(), path, 1);
+    }
+
+    public static Shape extrude(Path path, double height) {
         return extrude(new Shape(), path, height);
     }
 
-    public static Shape extrude(Shape shape, Path path, @Nullable Double height) {
-        height = height != null ? height : 1;
+    public static Shape extrude(Shape shape, Path path) {
+        return extrude(shape, path, 1);
+    }
 
+    public static Shape extrude(Shape shape, Path path, double height) {
         Path topPath = path.translate(0, 0, height);
         int i;
         int length = path.points.size();

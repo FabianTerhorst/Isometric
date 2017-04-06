@@ -1,7 +1,5 @@
 package io.fabianterhorst.isometric;
 
-import android.support.annotation.Nullable;
-
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -10,7 +8,7 @@ public class Point {
 
     public static final Point ORIGIN = new Point(0, 0, 0);
 
-    protected Double x, y, z;
+    protected double x, y, z;
 
     Point() {
 
@@ -27,15 +25,15 @@ public class Point {
         this.z = z;
     }
 
-    public Double getX() {
+    public double getX() {
         return x;
     }
 
-    public Double getY() {
+    public double getY() {
         return y;
     }
 
-    public Double getZ() {
+    public double getZ() {
         return z;
     }
 
@@ -52,20 +50,20 @@ public class Point {
     /**
      * Scale a point about a given origin
      */
-    public Point scale(Point origin, @Nullable Double dx, @Nullable Double dy, @Nullable Double dz) {
+    public Point scale(Point origin, double dx, double dy, double dz) {
         Point p = this.translate(-origin.x, -origin.y, -origin.z);
-        if (dy == null && dz == null) {
-             /* If both dy and dz are left out, scale all coordinates equally */
-            dy = dz = dx;
-        } else {
-            /* If just dz is missing, set it equal to 1 */
-            dz = dz == null ? 1 : dz;
-        }
-
         p.x *= dx;
         p.y *= dy;
         p.z *= dz;
         return p.translate(origin.x, origin.y, origin.z);
+    }
+
+    public Point scale(Point origin, double dx) {
+        return scale(origin, dx, dx, dx);
+    }
+
+    public Point scale(Point origin, double dx, double dy) {
+        return scale(origin, dx, dy, 1);
     }
 
     /**

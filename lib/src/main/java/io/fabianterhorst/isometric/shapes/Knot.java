@@ -17,7 +17,7 @@ public class Knot extends Shape {
         push(new Prism(new Point(4, 4, -2), 1, 1, 3).getPaths());
         push(new Path(new Point[]{new Point(0, 0, 2), new Point(0, 0, 1), new Point(1, 0, 1), new Point(1, 0, 2)}));
         push(new Path(new Point[]{new Point(0, 0, 2), new Point(0, 1, 2), new Point(0, 1, 1), new Point(0, 0, 1)}));
-        scalePaths(Point.ORIGIN, 1.0 / 5.0, null, null);
+        scalePaths(Point.ORIGIN, 1.0 / 5.0);
         translatePaths(-0.1, 0.15, 0.4);
         translatePaths(origin.getX(), origin.getY(), origin.getZ());
     }
