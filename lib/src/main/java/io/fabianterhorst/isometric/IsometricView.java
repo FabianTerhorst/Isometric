@@ -3,8 +3,8 @@ package io.fabianterhorst.isometric;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,7 +14,13 @@ import android.view.View;
 
 public class IsometricView extends View {
 
+    public interface OnItemClickListener {
+        void onClick(@NonNull Isometric.Item item);
+    }
+
     private final Isometric isometric = new Isometric();
+
+    private OnItemClickListener listener;
 
     private boolean sort = true;
 
@@ -24,6 +30,10 @@ public class IsometricView extends View {
 
     public void setSort(boolean sort) {
         this.sort = sort;
+    }
+
+    public void setClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     public void clear() {
@@ -54,17 +64,13 @@ public class IsometricView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        long time = System.nanoTime();
         isometric.measure(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec), sort);
-        Log.d("measure time", String.valueOf(System.nanoTime() - time));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        long time = System.nanoTime();
         isometric.draw(canvas);
-        Log.d("draw time", String.valueOf(System.nanoTime() - time));
     }
 
     @Override
@@ -74,14 +80,16 @@ public class IsometricView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            Isometric.Item item = isometric.findItemForPosition(new Point(event.getX(), event.getY()));
-            if (item != null) {
-                Log.d("item", "found");
+        if (listener != null) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                return true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                Isometric.Item item = isometric.findItemForPosition(new Point(event.getX(), event.getY()));
+                if (item != null) {
+                    listener.onClick(item);
+                }
+                performClick();
             }
-            performClick();
         }
         return super.onTouchEvent(event);
     }
