@@ -162,7 +162,7 @@ public class Shape {
             swapped = false;
             j++;
             for (int i = 0; i < paths.length - j; i++) {
-                if (depths[i] > depths[i + 1]) {
+                if (depths[i] < depths[i + 1]) {
                     tmp = paths[i];
                     tmp2 = depths[i];
                     paths[i] = paths[i + 1];
