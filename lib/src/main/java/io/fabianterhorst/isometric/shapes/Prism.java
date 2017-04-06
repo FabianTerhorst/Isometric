@@ -17,6 +17,8 @@ public class Prism extends Shape {
     public Prism(Point origin, double dx, double dy, double dz) {
         super();
 
+        Path[] paths = new Path[6];
+
         /* Squares parallel to the x-axis */
         Path face1 = new Path(new Point[]{
                 origin,
@@ -26,8 +28,8 @@ public class Prism extends Shape {
         });
 
         /* Push this face and its opposite */
-        push(face1);
-        push(face1.reverse().translate(0, dy, 0));
+        paths[0] = face1;
+        paths[1] = face1.reverse().translatePoints(0, dy, 0);
 
         /* Square parallel to the y-axis */
         Path face2 = new Path(new Point[]{
@@ -36,8 +38,8 @@ public class Prism extends Shape {
                 new Point(origin.getX(), origin.getY() + dy, origin.getZ() + dz),
                 new Point(origin.getX(), origin.getY() + dy, origin.getZ())
         });
-        push(face2);
-        push(face2.reverse().translate(dx, 0, 0));
+        paths[2] = face2;
+        paths[3] = face2.reverse().translatePoints(dx, 0, 0);
 
         /* Square parallel to the xy-plane */
         Path face3 = new Path(new Point[]{
@@ -47,7 +49,9 @@ public class Prism extends Shape {
                 new Point(origin.getX(), origin.getY() + dy, origin.getZ())
         });
         /* This surface is oriented backwards, so we need to reverse the points */
-        push(face3.reverse());
-        push(face3.translate(0, 0, dz));
+        paths[4] = face3.reverse();
+        paths[5] = face3.translatePoints(0, 0, dz);
+
+        setPaths(paths);
     }
 }

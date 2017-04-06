@@ -51,11 +51,9 @@ public class Point {
      * Scale a point about a given origin
      */
     public Point scale(Point origin, double dx, double dy, double dz) {
-        Point p = this.translate(-origin.x, -origin.y, -origin.z);
-        p.x *= dx;
-        p.y *= dy;
-        p.z *= dz;
-        return p.translate(origin.x, origin.y, origin.z);
+        return new Point((this.x - origin.x) * dx + origin.x,
+                (this.y - origin.y) * dy + origin.y,
+                (this.z - origin.z) * dz + origin.z);
     }
 
     public Point scale(Point origin, double dx) {
@@ -70,42 +68,45 @@ public class Point {
      * Rotate about origin on the X axis
      */
     public Point rotateX(Point origin, double angle) {
-        Point p = this.translate(-origin.x, -origin.y, -origin.z);
-
-        double z = p.z * Math.cos(angle) - p.y * Math.sin(angle);
-        double y = p.z * Math.sin(angle) + p.y * Math.cos(angle);
-        p.z = z;
-        p.y = y;
-
-        return p.translate(origin.x, origin.y, origin.z);
+        double pY = this.y - origin.y;
+        double pZ = this.z - origin.z;
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double z = pZ * cos - pY * sin;
+        double y = pZ * sin + pY * cos;
+        pZ = z;
+        pY = y;
+        return new Point(this.x, pY + origin.y, pZ + origin.z);
     }
 
     /**
      * Rotate about origin on the Y axis
      */
     public Point rotateY(Point origin, double angle) {
-        Point p = this.translate(-origin.x, -origin.y, -origin.z);
-
-        double x = p.x * Math.cos(angle) - p.z * Math.sin(angle);
-        double z = p.x * Math.sin(angle) + p.z * Math.cos(angle);
-        p.x = x;
-        p.z = z;
-
-        return p.translate(origin.x, origin.y, origin.z);
+        double pX = this.x - origin.x;
+        double pZ = this.z - origin.z;
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double x = pX * cos - pZ * sin;
+        double z = pX * sin + pZ * cos;
+        pX = x;
+        pZ = z;
+        return new Point(pX + origin.x, this.y, pZ  + origin.z);
     }
 
     /**
      * Rotate about origin on the Y axis
      */
     public Point rotateZ(Point origin, double angle) {
-        Point p = this.translate(-origin.x, -origin.y, -origin.z);
-
-        double x = p.x * Math.cos(angle) - p.y * Math.sin(angle);
-        double y = p.x * Math.sin(angle) + p.y * Math.cos(angle);
-        p.x = x;
-        p.y = y;
-
-        return p.translate(origin.x, origin.y, origin.z);
+        double pX = this.x - origin.x;
+        double pY = this.y - origin.y;
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double x = pX * cos - pY * sin;
+        double y = pX * sin + pY * cos;
+        pX = x;
+        pY = y;
+        return new Point(pX + origin.x, pY + origin.y, this.z);
     }
 
     /**

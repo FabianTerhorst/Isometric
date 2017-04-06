@@ -1,115 +1,147 @@
 package io.fabianterhorst.isometric;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * Created by fabianterhorst on 31.03.17.
  */
 
 public class Shape {
 
-    private List<Path> paths;
+    private Path[] paths;
 
     public Shape() {
-        this.paths = new ArrayList<>();
     }
 
-    public Shape(List<Path> paths) {
+    public Shape(Path[] paths) {
         this.paths = paths;
     }
 
     public void push(Path path) {
-        this.paths.add(path);
+        if (paths == null) {
+            paths = new Path[0];
+        }
+        paths = add(path, paths);
     }
 
-    public void push(List<Path> paths) {
-        this.paths.addAll(paths);
+    public void setPaths(Path[] paths) {
+        this.paths = paths;
     }
 
-    public List<Path> getPaths() {
+    public static Path[] add(Path point, Path[] values) {
+        Path[] anotherArray = new Path[values.length + 1];
+        System.arraycopy(values, 0, anotherArray, 0, values.length);
+        anotherArray[values.length] = point;
+        return anotherArray;
+    }
+
+    public static Path[] concat(Path[] a, Path[] b) {
+        Path[] c = new Path[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public void push(Path[] paths) {
+        if (this.paths == null) {
+            this.paths = new Path[0];
+        }
+        this.paths = concat(paths, this.paths);
+    }
+
+    public Path[] getPaths() {
         return paths;
     }
 
     public Shape translate(double dx, double dy, double dz) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.translate(dx, dy, dz));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.translate(dx, dy, dz);
         }
         return new Shape(paths);
     }
 
     public Shape rotateX(Point origin, double angle) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.rotateX(origin, angle));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.rotateX(origin, angle);
         }
         return new Shape(paths);
     }
 
     public Shape rotateY(Point origin, double angle) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.rotateY(origin, angle));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.rotateY(origin, angle);
         }
         return new Shape(paths);
     }
 
     public Shape rotateZ(Point origin, double angle) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.rotateZ(origin, angle));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.rotateZ(origin, angle);
         }
         return new Shape(paths);
     }
 
     public Shape scale(Point origin, double dx, double dy, double dz) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.scale(origin, dx, dy, dz));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.scale(origin, dx, dy, dz);
         }
         return new Shape(paths);
     }
 
     public Shape scale(Point origin, double dx, double dy) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.scale(origin, dx, dy));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.scale(origin, dx, dy);
         }
         return new Shape(paths);
     }
 
     public Shape scale(Point origin, double dx) {
-        List<Path> paths = new ArrayList<>();
-        for (Path path : this.paths) {
-            paths.add(path.scale(origin, dx));
+        Path[] paths = new Path[this.paths.length];
+        Path point;
+        for (int i = 0; i < this.paths.length; i++) {
+            point = this.paths[i];
+            paths[i] = point.scale(origin, dx);
         }
         return new Shape(paths);
     }
 
     public void scalePaths(Point origin, double dx, double dy, double dz) {
-        for (int i = 0, length = paths.size();i < length;i++) {
-            paths.set(i, paths.get(i).scale(origin, dx, dy, dz));
+        for (int i = 0, length = paths.length; i < length; i++) {
+            paths[i] = paths[i].scale(origin, dx, dy, dz);
         }
     }
 
     public void scalePaths(Point origin, double dx, double dy) {
-        for (int i = 0, length = paths.size();i < length;i++) {
-            paths.set(i, paths.get(i).scale(origin, dx, dy));
+        for (int i = 0, length = paths.length; i < length; i++) {
+            paths[i] = paths[i].scale(origin, dx, dy);
         }
     }
 
     public void scalePaths(Point origin, double dx) {
-        for (int i = 0, length = paths.size();i < length;i++) {
-            paths.set(i, paths.get(i).scale(origin, dx));
+        for (int i = 0, length = paths.length; i < length; i++) {
+            paths[i] = paths[i].scale(origin, dx);
         }
     }
 
     public void translatePaths(double dx, double dy, double dz) {
-        for (int i = 0, length = paths.size();i < length;i++) {
-            paths.set(i, paths.get(i).translate(dx, dy, dz));
+        for (int i = 0, length = paths.length; i < length; i++) {
+            paths[i] = paths[i].translate(dx, dy, dz);
         }
     }
 
@@ -117,13 +149,30 @@ public class Shape {
      * Sort the list of faces by distance then map the entries, returning
      * only the path and not the added "further point" from earlier.
      */
-    public List<Path> orderedPaths() {
-        Collections.sort(this.paths, new Comparator<Path>() {
-            @Override
-            public int compare(Path pathA, Path pathB) {
-                return Double.compare(pathB.depth(), pathA.depth());
+    public Path[] orderedPaths() {
+        double[] depths = new double[paths.length];
+        for (int i = 0; i < depths.length; i++) {
+            depths[i] = paths[i].depth();
+        }
+        boolean swapped = true;
+        int j = 0;
+        Path tmp;
+        double tmp2;
+        while (swapped) {
+            swapped = false;
+            j++;
+            for (int i = 0; i < paths.length - j; i++) {
+                if (depths[i] > depths[i + 1]) {
+                    tmp = paths[i];
+                    tmp2 = depths[i];
+                    paths[i] = paths[i + 1];
+                    depths[i] = depths[i + 1];
+                    paths[i + 1] = tmp;
+                    depths[i + 1] = tmp2;
+                    swapped = true;
+                }
             }
-        });
+        }
         return this.paths;
     }
 
@@ -142,22 +191,25 @@ public class Shape {
     public static Shape extrude(Shape shape, Path path, double height) {
         Path topPath = path.translate(0, 0, height);
         int i;
-        int length = path.points.size();
+        int length = path.points.length;
+
+        Path[] paths = new Path[length + 2];
 
         /* Push the top and bottom faces, top face must be oriented correctly */
-        shape.push(path.reverse());
-        shape.push(topPath);
+        paths[0] = path.reverse();
+        paths[1] = topPath;
 
         /* Push each side face */
+        Point[] points;
         for (i = 0; i < length; i++) {
-            List<Point> points = new ArrayList<>();
-            points.add(topPath.points.get(i));
-            points.add(path.points.get(i));
-            points.add(path.points.get((i + 1) % length));
-            points.add(topPath.points.get((i + 1) % length));
-            shape.push(new Path(points));
+            points = new Point[4];
+            points[0] = topPath.points[i];
+            points[1] = path.points[i];
+            points[2] = path.points[(i + 1) % length];
+            points[3] = topPath.points[(i + 1) % length];
+            paths[i + 2] = new Path(points);
         }
-
+        shape.setPaths(paths);
         return shape;
     }
 }

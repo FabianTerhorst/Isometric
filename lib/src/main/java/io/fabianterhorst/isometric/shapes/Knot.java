@@ -9,6 +9,7 @@ import io.fabianterhorst.isometric.Shape;
  */
 
 //Todo: needs an depth fix
+//Todo: optimize push
 public class Knot extends Shape {
 
     public Knot(Point origin) {

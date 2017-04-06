@@ -68,10 +68,10 @@ public class Isometric {
 
     public void add(Shape shape, Color color) {
         /* Fetch paths ordered by distance to prevent overlaps */
-        List<Path> paths = shape.orderedPaths();
+        Path[] paths = shape.orderedPaths();
 
-        for (int j = 0; j < paths.size(); j++) {
-            addPath(paths.get(j), color);
+        for (Path path : paths) {
+            addPath(path, color);
         }
     }
 
@@ -81,8 +81,8 @@ public class Isometric {
 
     private void addPath(Path path, Color color) {
         /* Compute color */
-        Vector v1 = Vector.fromTwoPoints(path.points.get(1), path.points.get(0));
-        Vector v2 = Vector.fromTwoPoints(path.points.get(2), path.points.get(1));
+        Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
+        Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
 
         Vector normal = Vector.crossProduct(v1, v2).normalize();
 
@@ -101,22 +101,22 @@ public class Isometric {
 
         for (Item item : items) {
 
-            if (item.transformedPoints.size() > 0) {
-                item.transformedPoints.clear();
-            }
+            item.transformedPoints = new Point[item.path.points.length];
 
             if (!item.drawPath.isEmpty()) {
                 item.drawPath.rewind();//Todo: test if .reset is not needed and rewind is enough
             }
 
-            for (Point point : item.path.points) {
-                item.transformedPoints.add(translatePoint(point));
+            Point point;
+            for (int i = 0;i < item.path.points.length;i++) {
+                point = item.path.points[i];
+                item.transformedPoints[i] = translatePoint(point);
             }
 
-            item.drawPath.moveTo((float) item.transformedPoints.get(0).x, (float) item.transformedPoints.get(0).y);
+            item.drawPath.moveTo((float) item.transformedPoints[0].x, (float) item.transformedPoints[0].y);
 
-            for (int i = 1, length = item.transformedPoints.size(); i < length; i++) {
-                item.drawPath.lineTo((float) item.transformedPoints.get(i).x, (float) item.transformedPoints.get(i).y);
+            for (int i = 1, length = item.transformedPoints.length; i < length; i++) {
+                item.drawPath.lineTo((float) item.transformedPoints[i].x, (float) item.transformedPoints[i].y);
             }
 
             item.drawPath.close();
@@ -284,7 +284,7 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn;
-        List<Point> transformedPoints;
+        Point[] transformedPoints;
         android.graphics.Path drawPath;
 
         Item(Item item) {
@@ -297,7 +297,7 @@ public class Isometric {
         }
 
         Item(Path path, Color baseColor) {
-            transformedPoints = new ArrayList<>();
+            //transformedPoints = new ArrayList<>();
             drawPath = new android.graphics.Path();
             drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -331,28 +331,28 @@ public class Isometric {
         return c;
     }
 
-    private boolean hasIntersection(List<Point> pointsA, List<Point> pointsB) {
-        int i, j, lengthA = pointsA.size(), lengthB = pointsB.size(), lengthPolyA, lengthPolyB;
-        double AminX = pointsA.get(0).x;
-        double AminY = pointsA.get(0).y;
+    private boolean hasIntersection(Point[] pointsA, Point[] pointsB) {
+        int i, j, lengthA = pointsA.length, lengthB = pointsB.length, lengthPolyA, lengthPolyB;
+        double AminX = pointsA[0].x;
+        double AminY = pointsA[0].y;
         double AmaxX = AminX;
         double AmaxY = AminY;
-        double BminX = pointsB.get(0).x;
-        double BminY = pointsB.get(0).y;
+        double BminX = pointsB[0].x;
+        double BminY = pointsB[0].y;
         double BmaxX = BminX;
         double BmaxY = BminY;
 
         Point point;
 
         for (i = 0; i < lengthA; i++) {
-            point = pointsA.get(i);
+            point = pointsA[i];
             AminX = Math.min(AminX, point.x);
             AminY = Math.min(AminY, point.y);
             AmaxX = Math.max(AmaxX, point.x);
             AmaxY = Math.max(AmaxY, point.y);
         }
         for (i = 0; i < lengthB; i++) {
-            point = pointsB.get(i);
+            point = pointsB[i];
             BminX = Math.min(BminX, point.x);
             BminY = Math.min(BminY, point.y);
             BmaxX = Math.max(BmaxX, point.x);
@@ -362,8 +362,8 @@ public class Isometric {
         if (((AminX <= BminX && BminX <= AmaxX) || (BminX <= AminX && AminX <= BmaxX)) &&
                 ((AminY <= BminY && BminY <= AmaxY) || (BminY <= AminY && AminY <= BmaxY))) {
             // now let's be more specific
-            Point[] polyA = cloneListAndInsert(pointsA, pointsA.get(0));
-            Point[] polyB = cloneListAndInsert(pointsB, pointsB.get(0));
+            Point[] polyA = Path.add(pointsA[0], pointsA);
+            Point[] polyB = Path.add(pointsB[0], pointsB);
 
             // see if edges cross, or one contained in the other
             lengthPolyA = polyA.length;
@@ -422,21 +422,5 @@ public class Isometric {
         } else {
             return false;
         }
-    }
-
-    private Point[] cloneListAndInsert(List<Point> points, Point insertPoint) {
-        int size = points.size();
-        Point[] clonedList = new Point[size + 1];
-        Point point, newPoint;
-        for (int i = 0; i < size; i++) {
-            point = points.get(i);
-            newPoint = new Point();
-            newPoint.x = point.x;
-            newPoint.y = point.y;
-            newPoint.z = point.z;
-            clonedList[i] = newPoint;
-        }
-        clonedList[size] = insertPoint;
-        return clonedList;
     }
 }
