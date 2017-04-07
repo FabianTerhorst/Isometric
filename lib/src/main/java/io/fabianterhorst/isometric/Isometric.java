@@ -60,7 +60,7 @@ public class Isometric {
         addPath(path, color);
     }
 
-    public void add(List<Path> paths, Color color) {
+    public void add(Path[] paths, Color color) {
         for (Path path : paths) {
             add(path, color);
         }
