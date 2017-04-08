@@ -80,19 +80,29 @@ public class Isometric {
     }
 
     private void addPath(Path path, Color color) {
-        /* Compute color */
-        Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
-        Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
+        this.items.add(new Item(path, transformColor(path, color)));
+    }
 
-        Vector normal = Vector.crossProduct(v1, v2).normalize();
-
-        /**
-         * Brightness is between -1 and 1 and is computed based
-         * on the dot product between the light source vector and normal.
-         */
-        double brightness = Vector.dotProduct(normal, this.lightAngle);
-        color = color.lighten(brightness * this.colorDifference, this.lightColor);
-        this.items.add(new Item(path, color));
+    private Color transformColor(Path path, Color color) {
+        Point p1 = path.points[1];
+        Point p2 = path.points[0];
+        double i = p2.x - p1.x;
+        double j = p2.y - p1.y;
+        double k = p2.z - p1.z;
+        p1 = path.points[2];
+        p2 = path.points[1];
+        double i2 = p2.x - p1.x;
+        double j2 = p2.y - p1.y;
+        double k2 = p2.z - p1.z;
+        double i3 = j * k2 - j2 * k;
+        double j3 = -1 * (i * k2 - i2 * k);
+        double k3 = i * j2 - i2 * j;
+        double magnitude = Math.sqrt(i3 * i3 + j3 * j3 + k3 * k3);
+        i = magnitude == 0 ? 0 : i3 / magnitude;
+        j = magnitude == 0 ? 0 : j3 / magnitude;
+        k = magnitude == 0 ? 0 : k3 / magnitude;
+        double brightness = i * lightAngle.i + j * lightAngle.j + k * lightAngle.k;
+        return color.lighten(brightness * this.colorDifference, this.lightColor);
     }
 
     public void measure(int width, int height, boolean sort) {
@@ -144,28 +154,30 @@ public class Isometric {
                 if (hasIntersection(itemA.transformedPoints, itemB.transformedPoints)) {
                     int cmpPath = itemA.path.closerThan(itemB.path, observer);
                     if (cmpPath < 0) {
-                        drawBefore.get(i).add(drawBefore.get(i).size(), j);
-                    }
-                    if (cmpPath > 0) {
-                        drawBefore.get(j).add(drawBefore.get(j).size(), i);
+                        drawBefore.get(i).add(j);
+                    } else if (cmpPath > 0) {
+                        drawBefore.get(j).add(i);
                     }
                 }
             }
         }
-        Item currItem;
         int drawThisTurn = 1;
+        Item currItem;
+        List<Integer> integers;
         while (drawThisTurn == 1) {
             drawThisTurn = 0;
             for (int i = 0; i < length; i++) {
-                if (items.get(i).drawn == 0) {
+                currItem = items.get(i);
+                integers = drawBefore.get(i);
+                if (currItem.drawn == 0) {
                     int canDraw = 1;
-                    for (int j = 0; j < drawBefore.get(i).size(); j++) {
-                        if (items.get(drawBefore.get(i).get(j)).drawn == 0) {
+                    for (int j = 0, lengthIntegers = integers.size(); j < lengthIntegers; j++) {
+                        if (items.get(integers.get(j)).drawn == 0) {
                             canDraw = 0;
+                            break;
                         }
                     }
                     if (canDraw == 1) {
-                        currItem = items.get(i);
                         Item item = new Item(currItem);
                         sortedItems.add(item);
                         currItem.drawn = 1;
