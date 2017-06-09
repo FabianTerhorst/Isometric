@@ -189,7 +189,7 @@ public class Shape {
     }
 
     public static Shape extrude(Shape shape, Path path, double height) {
-        Path topPath = path.translate(0, 0, height);
+        Path topPath = path.translate(/* z */0/* y */, 0 /* x */, height);
         int i;
         int length = path.points.length;
 

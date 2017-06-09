@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -45,7 +46,11 @@ public class IsometricView extends View {
     }
 
     public void add(Shape shape, Color color) {
+        /*if (sort) {
+            isometric.add(shape.getPaths(), color);
+        } else {*/
         isometric.add(shape, color);
+        //}
     }
 
     public IsometricView(Context context, AttributeSet attrs) {
@@ -64,7 +69,9 @@ public class IsometricView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        long time = System.nanoTime();
         isometric.measure(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec), sort);
+        Log.d("time", String.valueOf(System.nanoTime() - time));
     }
 
     @Override

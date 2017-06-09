@@ -39,7 +39,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         handler.post(runnable);*/
-        sampleThree(0, isometricView);
+
+        isometricView.setSort(true);
+        isometricView.add(new Prism(new Point(2, 4, 0), 3d, 3d, 1d), new Color(160, 60, 50));
+        isometricView.add(new Prism(new Point(2, 0, 1)), new Color(50, 60, 160));
+        isometricView.add(new Octahedron(new Point(2, 2, 1)), new Color(0, 180, 180));
+        isometricView.add(new Pyramid(new Point(2, 2, 0)), new Color(180, 180, 0));
+        isometricView.add(new Stairs(new Point(2, 3, 0), 10), new Color(180, 180, 0));
+        //sampleThree(0, isometricView);
     }
 
     public void grid(IsometricView isometricView) {
