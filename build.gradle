@@ -2,16 +2,13 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        if (project.hasProperty('buildCMD')) {
-            classpath 'com.android.tools.build:gradle:2.3.0'
-        } else {
-            classpath 'com.android.tools.build:gradle:2.4.0-alpha4'
-        }
+        classpath 'com.android.tools.build:gradle:3.0.0-beta4'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.facebook.testing.screenshot:plugin:0.4.2'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,6 +18,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
