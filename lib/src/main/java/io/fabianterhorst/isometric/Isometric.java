@@ -292,7 +292,7 @@ public class Isometric {
         return null;
     }
 
-    static class Item {
+    public static class Item {
         Path path;
         Color baseColor;
         Paint paint;
