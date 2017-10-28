@@ -1,9 +1,11 @@
 package io.fabianterhorst.isometric.sample;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import io.fabianterhorst.isometric.Color;
+import io.fabianterhorst.isometric.Isometric;
 import io.fabianterhorst.isometric.IsometricView;
 import io.fabianterhorst.isometric.Path;
 import io.fabianterhorst.isometric.Point;
@@ -23,7 +25,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         /*final */
-        IsometricView isometricView = (IsometricView) findViewById(R.id.isometricView);
+        IsometricView isometricView = findViewById(R.id.isometricView);
+        isometricView.setClickListener(new IsometricView.OnItemClickListener() {
+            @Override
+            public void onClick(@NonNull Isometric.Item item) {
+
+            }
+        });
         //Sort false improves performance but requires the correct order while adding
         //Sort true also does not support every state that is possible with sort false
         //isometricView.setSort(false);

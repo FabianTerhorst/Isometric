@@ -8,12 +8,12 @@ archivesBaseName = 'Isometric'
 project.screenshots.customTestRunner = true
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 6
         versionName "0.0.6"
         testInstrumentationRunner 'io.fabianterhorst.isometric.screenshot.IsometricTestRunner'
@@ -23,7 +23,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             defaultConfig {
-                targetSdkVersion 26
+                targetSdkVersion 27
             }
         }
         debug {
@@ -37,7 +37,7 @@ android {
 def siteUrl = 'https://github.com/FabianTerhorst/Isometric'
 def gitUrl = 'https://github.com/FabianTerhorst/Isometric.git'
 
-version = "0.0.6.2"
+version = "0.0.6.5"
 group = "io.fabianterhorst"
 
 install {
@@ -58,6 +58,7 @@ install {
                     license {
                         name 'The Apache License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
                     }
                 }
                 developers {
@@ -107,12 +108,19 @@ task javadoc(type: Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    // options.encoding = 'UTF-8'
+}
+
 artifacts {
+    archives javadocJar
     archives sourcesJar
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:26.0.2'
+    compile 'com.android.support:support-annotations:27.0.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
