@@ -123,6 +123,13 @@ public class Isometric {
                 item.transformedPoints[i] = translatePoint(point);
             }
 
+            //if performing facial culling
+            if (cullPath(item)) {
+                //the path is invisible. It does not need to be drawn
+                item.shouldDraw = false;
+                continue;
+            }
+
             item.drawPath.moveTo((float) item.transformedPoints[0].x, (float) item.transformedPoints[0].y);
 
             for (int i = 1, length = item.transformedPoints.length; i < length; i++) {
@@ -135,6 +142,19 @@ public class Isometric {
         if (sort) {
             this.items = sortPaths();
         }
+    }
+
+    private boolean cullPath(Item item) {
+        double a = item.transformedPoints[0].getX() * item.transformedPoints[1].getY();
+        double b = item.transformedPoints[1].getX() * item.transformedPoints[2].getY();
+        double c = item.transformedPoints[2].getX() * item.transformedPoints[0].getY();
+
+        double d = item.transformedPoints[1].getX() * item.transformedPoints[0].getY();
+        double e = item.transformedPoints[2].getX() * item.transformedPoints[1].getY();
+        double f = item.transformedPoints[0].getX() * item.transformedPoints[2].getY();
+
+        double z = a + b + c - d - e - f;
+        return z > 0;
     }
 
     private List<Item> sortPaths() {
@@ -204,6 +224,9 @@ public class Isometric {
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.restore();*/
+            //make sure we're supposed to draw the item
+            if (!item.shouldDraw)
+                continue;
             canvas.drawPath(item.drawPath, item.paint);
         }
     }
@@ -297,6 +320,7 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn;
+        boolean shouldDraw;
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
@@ -307,11 +331,13 @@ public class Isometric {
             this.paint = item.paint;
             this.path = item.path;
             this.baseColor = item.baseColor;
+            this.shouldDraw = item.shouldDraw;
         }
 
         Item(Path path, Color baseColor) {
             drawPath = new android.graphics.Path();
             drawn = 0;
+            this.shouldDraw = true;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
             this.paint.setStrokeWidth(1);
