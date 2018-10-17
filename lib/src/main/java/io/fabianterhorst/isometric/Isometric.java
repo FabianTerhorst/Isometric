@@ -28,6 +28,10 @@ public class Isometric {
 
     private final Color lightColor;
 
+    private int currentWidth, currentHeight;
+
+    private boolean itemsChanged;
+
     public Isometric() {
         this.angle = Math.PI / 6;
         this.scale = 70;
@@ -43,6 +47,9 @@ public class Isometric {
         this.lightAngle = lightPosition.normalize();
         this.colorDifference = 0.20;
         this.lightColor = new Color(255, 255, 255);
+        this.currentWidth = -1;
+        this.currentHeight = -1;
+        this.itemsChanged = true;
 
     }
 
@@ -76,10 +83,12 @@ public class Isometric {
     }
 
     public void clear() {
+        this.itemsChanged = true;
         items.clear();
     }
 
     private void addPath(Path path, Color color) {
+        this.itemsChanged = true;
         this.items.add(new Item(path, transformColor(path, color)));
     }
 
@@ -106,6 +115,17 @@ public class Isometric {
     }
 
     public void measure(int width, int height, boolean sort) {
+
+        //only perform measure operation:
+        //if the bounds have changed
+        //OR if the items have changed
+        if (this.currentWidth == width && this.currentHeight == height && !this.itemsChanged)
+            return;
+
+        this.currentWidth = width;
+        this.currentHeight = height;
+        this.itemsChanged = false;
+
         this.originX = width / 2;
         this.originY = height * 0.9;
 
