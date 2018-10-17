@@ -32,8 +32,8 @@ public class IsometricView extends View {
         this.sort = sort;
     }
 
-    //Only enable if your paths are defined in a clockwise rotation order
     //This greatly improves drawing speed
+    //Paths must be defined in a clockwise rotation order
     public void setCull(boolean cull) {
         this.cull = cull;
     }

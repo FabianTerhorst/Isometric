@@ -147,7 +147,7 @@ public class Isometric {
 
             //remove item if not in view
             //the if conditions here are ordered carefully to save computation, fail fast approach
-            if ((cull && cullPath(item)) || this.itemInDrawingBounds(item)) {
+            if ((cull && cullPath(item)) || !this.itemInDrawingBounds(item)) {
                 //the path is invisible. It does not need to be considered any more
                 this.items.remove(itemIndex);
                 continue;
