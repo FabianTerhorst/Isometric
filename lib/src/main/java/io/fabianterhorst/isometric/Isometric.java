@@ -129,7 +129,9 @@ public class Isometric {
         this.originX = width / 2;
         this.originY = height * 0.9;
 
-        for (Item item : items) {
+        int itemIndex = 0;
+        while (itemIndex < items.size()) {
+            Item item = items.get(itemIndex);
 
             item.transformedPoints = new Point[item.path.points.length];
 
@@ -145,9 +147,13 @@ public class Isometric {
 
             //if performing facial culling
             if (cullPath(item)) {
-                //the path is invisible. It does not need to be drawn
-                item.shouldDraw = false;
+                //the path is invisible. It does not need to be considered any more
+                this.items.remove(itemIndex);
                 continue;
+            }
+            else
+            {
+                itemIndex++;
             }
 
             item.drawPath.moveTo((float) item.transformedPoints[0].x, (float) item.transformedPoints[0].y);
@@ -244,9 +250,6 @@ public class Isometric {
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.restore();*/
-            //make sure we're supposed to draw the item
-            if (!item.shouldDraw)
-                continue;
             canvas.drawPath(item.drawPath, item.paint);
         }
     }
@@ -340,7 +343,6 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn;
-        boolean shouldDraw;
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
@@ -351,13 +353,11 @@ public class Isometric {
             this.paint = item.paint;
             this.path = item.path;
             this.baseColor = item.baseColor;
-            this.shouldDraw = item.shouldDraw;
         }
 
         Item(Path path, Color baseColor) {
             drawPath = new android.graphics.Path();
             drawn = 0;
-            this.shouldDraw = true;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
             this.paint.setStrokeWidth(1);
