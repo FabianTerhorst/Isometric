@@ -114,7 +114,7 @@ public class Isometric {
         return color.lighten(brightness * this.colorDifference, this.lightColor);
     }
 
-    public void measure(int width, int height, boolean sort) {
+    public void measure(int width, int height, boolean sort, boolean cull) {
 
         //only perform measure operation:
         //if the bounds have changed
@@ -145,8 +145,9 @@ public class Isometric {
                 item.transformedPoints[i] = translatePoint(point);
             }
 
-            //if performing facial culling
-            if (cullPath(item)) {
+            //remove item if not in view
+            //the if conditions here are ordered carefully to save computation, fail fast approach
+            if ((cull && cullPath(item)) || this.itemInDrawingBounds(item)) {
                 //the path is invisible. It does not need to be considered any more
                 this.items.remove(itemIndex);
                 continue;
@@ -181,6 +182,19 @@ public class Isometric {
 
         double z = a + b + c - d - e - f;
         return z > 0;
+    }
+
+    private boolean itemInDrawingBounds(Item item) {
+        for (int i = 0; i< item.transformedPoints.length; i++)
+        {
+            //if any point is in bounds, the item is worth drawing
+            if (item.transformedPoints[i].getX() >= 0 &&
+                item.transformedPoints[i].getX() <= this.currentHeight  &&
+                item.transformedPoints[i].getY() >= 0 &&
+                item.transformedPoints[i].getY() <= this.currentHeight)
+                return true;
+        }
+        return false;
     }
 
     private List<Item> sortPaths() {
