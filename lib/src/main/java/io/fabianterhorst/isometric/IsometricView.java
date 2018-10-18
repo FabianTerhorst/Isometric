@@ -33,7 +33,7 @@ public class IsometricView extends View {
     }
 
     //This greatly improves drawing speed
-    //Paths must be defined in a clockwise rotation order
+    //Paths must be defined in a counter-clockwise rotation order
     public void setCull(boolean cull) {
         this.cull = cull;
     }
