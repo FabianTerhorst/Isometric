@@ -189,7 +189,7 @@ public class Isometric {
         {
             //if any point is in bounds, the item is worth drawing
             if (item.transformedPoints[i].getX() >= 0 &&
-                item.transformedPoints[i].getX() <= this.currentHeight  &&
+                item.transformedPoints[i].getX() <= this.currentWidth  &&
                 item.transformedPoints[i].getY() >= 0 &&
                 item.transformedPoints[i].getY() <= this.currentHeight)
                 return true;
