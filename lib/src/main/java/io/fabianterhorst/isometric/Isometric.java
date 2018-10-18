@@ -28,6 +28,10 @@ public class Isometric {
 
     private final Color lightColor;
 
+    private int currentWidth, currentHeight;
+
+    private boolean itemsChanged;
+
     public Isometric() {
         this.angle = Math.PI / 6;
         this.scale = 70;
@@ -43,6 +47,9 @@ public class Isometric {
         this.lightAngle = lightPosition.normalize();
         this.colorDifference = 0.20;
         this.lightColor = new Color(255, 255, 255);
+        this.currentWidth = -1;
+        this.currentHeight = -1;
+        this.itemsChanged = true;
 
     }
 
@@ -76,10 +83,12 @@ public class Isometric {
     }
 
     public void clear() {
+        this.itemsChanged = true;
         items.clear();
     }
 
     private void addPath(Path path, Color color) {
+        this.itemsChanged = true;
         this.items.add(new Item(path, transformColor(path, color)));
     }
 
@@ -105,11 +114,24 @@ public class Isometric {
         return color.lighten(brightness * this.colorDifference, this.lightColor);
     }
 
-    public void measure(int width, int height, boolean sort) {
+    public void measure(int width, int height, boolean sort, boolean cull) {
+
+        //only perform measure operation:
+        //if the bounds have changed
+        //OR if the items have changed
+        if (this.currentWidth == width && this.currentHeight == height && !this.itemsChanged)
+            return;
+
+        this.currentWidth = width;
+        this.currentHeight = height;
+        this.itemsChanged = false;
+
         this.originX = width / 2;
         this.originY = height * 0.9;
 
-        for (Item item : items) {
+        int itemIndex = 0;
+        while (itemIndex < items.size()) {
+            Item item = items.get(itemIndex);
 
             item.transformedPoints = new Point[item.path.points.length];
 
@@ -121,6 +143,18 @@ public class Isometric {
             for (int i = 0;i < item.path.points.length;i++) {
                 point = item.path.points[i];
                 item.transformedPoints[i] = translatePoint(point);
+            }
+
+            //remove item if not in view
+            //the if conditions here are ordered carefully to save computation, fail fast approach
+            if ((cull && cullPath(item)) || !this.itemInDrawingBounds(item)) {
+                //the path is invisible. It does not need to be considered any more
+                this.items.remove(itemIndex);
+                continue;
+            }
+            else
+            {
+                itemIndex++;
             }
 
             item.drawPath.moveTo((float) item.transformedPoints[0].x, (float) item.transformedPoints[0].y);
@@ -135,6 +169,32 @@ public class Isometric {
         if (sort) {
             this.items = sortPaths();
         }
+    }
+
+    private boolean cullPath(Item item) {
+        double a = item.transformedPoints[0].getX() * item.transformedPoints[1].getY();
+        double b = item.transformedPoints[1].getX() * item.transformedPoints[2].getY();
+        double c = item.transformedPoints[2].getX() * item.transformedPoints[0].getY();
+
+        double d = item.transformedPoints[1].getX() * item.transformedPoints[0].getY();
+        double e = item.transformedPoints[2].getX() * item.transformedPoints[1].getY();
+        double f = item.transformedPoints[0].getX() * item.transformedPoints[2].getY();
+
+        double z = a + b + c - d - e - f;
+        return z > 0;
+    }
+
+    private boolean itemInDrawingBounds(Item item) {
+        for (int i = 0; i< item.transformedPoints.length; i++)
+        {
+            //if any point is in bounds, the item is worth drawing
+            if (item.transformedPoints[i].getX() >= 0 &&
+                item.transformedPoints[i].getX() <= this.currentWidth  &&
+                item.transformedPoints[i].getY() >= 0 &&
+                item.transformedPoints[i].getY() <= this.currentHeight)
+                return true;
+        }
+        return false;
     }
 
     private List<Item> sortPaths() {
