@@ -129,8 +129,8 @@ public class Isometric {
         this.originX = width / 2;
         this.originY = height * 0.9;
 
-        int itemIndex = 0;
-        while (itemIndex < items.size()) {
+        int itemIndex = 0, itemSize = items.size();
+        while (itemIndex < itemSize) {
             Item item = items.get(itemIndex);
 
             item.transformedPoints = new Point[item.path.points.length];
@@ -145,11 +145,14 @@ public class Isometric {
                 item.transformedPoints[i] = translatePoint(point);
             }
 
-            //remove item if not in view
-            //the if conditions here are ordered carefully to save computation, fail fast approach
+            /**
+             * This greatly improves drawing speed
+             * Paths must be defined in a counter-clockwise rotation order
+             */
             if ((cull && cullPath(item)) || !this.itemInDrawingBounds(item)) {
                 //the path is invisible. It does not need to be considered any more
                 this.items.remove(itemIndex);
+                itemSize--;
                 continue;
             }
             else
@@ -185,7 +188,7 @@ public class Isometric {
     }
 
     private boolean itemInDrawingBounds(Item item) {
-        for (int i = 0; i< item.transformedPoints.length; i++)
+        for (int i = 0, len = item.transformedPoints.length; i< len; i++)
         {
             //if any point is in bounds, the item is worth drawing
             if (item.transformedPoints[i].getX() >= 0 &&
