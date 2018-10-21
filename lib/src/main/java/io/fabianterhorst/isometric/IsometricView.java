@@ -22,7 +22,7 @@ public class IsometricView extends View {
 
     private OnItemClickListener listener;
 
-    private boolean sort = true;
+    private boolean sort = true, cull = false, boundsCheck = false;
 
     public IsometricView(Context context) {
         super(context);
@@ -30,6 +30,21 @@ public class IsometricView extends View {
 
     public void setSort(boolean sort) {
         this.sort = sort;
+    }
+
+    /**
+     * This greatly improves drawing speed
+     * Paths must be defined in a counter-clockwise rotation order
+     */
+    public void setCull(boolean cull) {
+        this.cull = cull;
+    }
+
+    /**
+     * This improves drawing speed by not considering items that are outside of view bounds
+     */
+    public void setBoundsCheck(boolean boundsCheck) {
+        this.boundsCheck = boundsCheck;
     }
 
     public void setClickListener(OnItemClickListener listener) {
@@ -64,7 +79,7 @@ public class IsometricView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        isometric.measure(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec), sort);
+        isometric.measure(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec), sort, cull, boundsCheck);
     }
 
     @Override
