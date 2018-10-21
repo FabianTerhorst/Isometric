@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 6
-        versionName "0.0.6"
+        versionCode 7
+        versionName "0.0.7"
         testInstrumentationRunner 'io.fabianterhorst.isometric.screenshot.IsometricTestRunner'
     }
     buildTypes {
@@ -37,7 +37,7 @@ android {
 def siteUrl = 'https://github.com/FabianTerhorst/Isometric'
 def gitUrl = 'https://github.com/FabianTerhorst/Isometric.git'
 
-version = "0.0.6.5"
+version = "0.0.7"
 group = "io.fabianterhorst"
 
 install {
