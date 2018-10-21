@@ -1,8 +1,8 @@
 package io.fabianterhorst.isometric.sample;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.fabianterhorst.isometric.Color;
 import io.fabianterhorst.isometric.Isometric;

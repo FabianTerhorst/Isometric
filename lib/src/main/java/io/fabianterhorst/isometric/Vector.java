@@ -1,6 +1,6 @@
 package io.fabianterhorst.isometric;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by fabianterhorst on 31.03.17.

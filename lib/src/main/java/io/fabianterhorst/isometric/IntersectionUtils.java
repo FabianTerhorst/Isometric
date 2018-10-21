@@ -1,0 +1,125 @@
+package io.fabianterhorst.isometric;
+
+import java.util.List;
+
+public class IntersectionUtils {
+
+    private IntersectionUtils() {
+
+    }
+
+    public static boolean isPointInPoly(List<Point> poly, double x, double y) {
+        boolean c = false;
+        for (int i = -1, l = poly.size(), j = l - 1; ++i < l; j = i) {
+            if (((poly.get(i).y <= y && y < poly.get(j).y) || (poly.get(j).y <= y && y < poly.get(i).y))
+                    && (x < (poly.get(j).x - poly.get(i).x) * (y - poly.get(i).y) / (poly.get(j).y - poly.get(i).y) + poly.get(i).x)) {
+                c = !c;
+            }
+        }
+        return c;
+    }
+
+    private static boolean isPointInPoly(Point[] poly, double x, double y) {
+        boolean c = false;
+        for (int i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
+            if (((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y))
+                    && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)) {
+                c = !c;
+            }
+        }
+        return c;
+    }
+
+    public static boolean hasIntersection(Point[] pointsA, Point[] pointsB) {
+        int i, j, lengthA = pointsA.length, lengthB = pointsB.length, lengthPolyA, lengthPolyB;
+        double AminX = pointsA[0].x;
+        double AminY = pointsA[0].y;
+        double AmaxX = AminX;
+        double AmaxY = AminY;
+        double BminX = pointsB[0].x;
+        double BminY = pointsB[0].y;
+        double BmaxX = BminX;
+        double BmaxY = BminY;
+
+        Point point;
+
+        for (i = 0; i < lengthA; i++) {
+            point = pointsA[i];
+            AminX = Math.min(AminX, point.x);
+            AminY = Math.min(AminY, point.y);
+            AmaxX = Math.max(AmaxX, point.x);
+            AmaxY = Math.max(AmaxY, point.y);
+        }
+        for (i = 0; i < lengthB; i++) {
+            point = pointsB[i];
+            BminX = Math.min(BminX, point.x);
+            BminY = Math.min(BminY, point.y);
+            BmaxX = Math.max(BmaxX, point.x);
+            BmaxY = Math.max(BmaxY, point.y);
+        }
+
+        if (((AminX <= BminX && BminX <= AmaxX) || (BminX <= AminX && AminX <= BmaxX)) &&
+                ((AminY <= BminY && BminY <= AmaxY) || (BminY <= AminY && AminY <= BmaxY))) {
+            // now let's be more specific
+            Point[] polyA = Path.add(pointsA[0], pointsA);
+            Point[] polyB = Path.add(pointsB[0], pointsB);
+
+            // see if edges cross, or one contained in the other
+            lengthPolyA = polyA.length;
+            lengthPolyB = polyB.length;
+
+            double[] deltaAX = new double[lengthPolyA];
+            double[] deltaAY = new double[lengthPolyA];
+            double[] deltaBX = new double[lengthPolyB];
+            double[] deltaBY = new double[lengthPolyB];
+
+            double[] rA = new double[lengthPolyA];
+            double[] rB = new double[lengthPolyB];
+
+            for (i = 0; i <= lengthPolyA - 2; i++) {
+                point = polyA[i];
+                deltaAX[i] = polyA[i + 1].x - point.x;
+                deltaAY[i] = polyA[i + 1].y - point.y;
+                //equation written as deltaY.x - deltaX.y + r = 0
+                rA[i] = deltaAX[i] * point.y - deltaAY[i] * point.x;
+            }
+
+            for (i = 0; i <= lengthPolyB - 2; i++) {
+                point = polyB[i];
+                deltaBX[i] = polyB[i + 1].x - point.x;
+                deltaBY[i] = polyB[i + 1].y - point.y;
+                rB[i] = deltaBX[i] * point.y - deltaBY[i] * point.x;
+            }
+
+            for (i = 0; i <= lengthPolyA - 2; i++) {
+                for (j = 0; j <= lengthPolyB - 2; j++) {
+                    if (deltaAX[i] * deltaBY[j] != deltaAY[i] * deltaBX[j]) {
+                        //case when vectors are colinear, or one polygon included in the other, is covered after
+                        //two segments cross each other if and only if the points of the first are on each side of the line defined by the second and vice-versa
+                        if ((deltaAY[i] * polyB[j].x - deltaAX[i] * polyB[j].y + rA[i]) * (deltaAY[i] * polyB[j + 1].x - deltaAX[i] * polyB[j + 1].y + rA[i]) < -0.000000001 &&
+                                (deltaBY[j] * polyA[i].x - deltaBX[j] * polyA[i].y + rB[j]) * (deltaBY[j] * polyA[i + 1].x - deltaBX[j] * polyA[i + 1].y + rB[j]) < -0.000000001) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            for (i = 0; i <= lengthPolyA - 2; i++) {
+                point = polyA[i];
+                if (isPointInPoly(polyB, point.x, point.y)) {
+                    return true;
+                }
+            }
+            for (i = 0; i <= lengthPolyB - 2; i++) {
+                point = polyB[i];
+                if (isPointInPoly(polyA, point.x, point.y)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } else {
+            return false;
+        }
+    }
+}
