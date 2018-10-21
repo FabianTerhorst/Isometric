@@ -92,18 +92,35 @@ public class Isometric {
         this.items.add(new Item(path, transformColor(path, color)));
     }
 
-    private Color transformColor(Path path, Color color) {
-        /* Compute color */
+    /*private Color transformColor(Path path, Color color) {
         Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
         Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
 
         Vector normal = Vector.crossProduct(v1, v2).normalize();
 
-        /**
-         * Brightness is between -1 and 1 and is computed based
-         * on the dot product between the light source vector and normal.
-         */
         double brightness = Vector.dotProduct(normal, this.lightAngle);
+        return color.lighten(brightness * this.colorDifference, this.lightColor);
+    }*/
+
+    private Color transformColor(Path path, Color color) {
+        Point p1 = path.points[1];
+        Point p2 = path.points[0];
+        double i = p2.x - p1.x;
+        double j = p2.y - p1.y;
+        double k = p2.z - p1.z;
+        p1 = path.points[2];
+        p2 = path.points[1];
+        double i2 = p2.x - p1.x;
+        double j2 = p2.y - p1.y;
+        double k2 = p2.z - p1.z;
+        double i3 = j * k2 - j2 * k;
+        double j3 = -1 * (i * k2 - i2 * k);
+        double k3 = i * j2 - i2 * j;
+        double magnitude = Math.sqrt(i3 * i3 + j3 * j3 + k3 * k3);
+        i = magnitude == 0 ? 0 : i3 / magnitude;
+        j = magnitude == 0 ? 0 : j3 / magnitude;
+        k = magnitude == 0 ? 0 : k3 / magnitude;
+        double brightness = i * lightAngle.i + j * lightAngle.j + k * lightAngle.k;
         return color.lighten(brightness * this.colorDifference, this.lightColor);
     }
 
@@ -133,7 +150,7 @@ public class Isometric {
             }
 
             Point point;
-            for (int i = 0; i < item.path.points.length; i++) {
+            for (int i = 0, length = item.path.points.length; i < length; i++) {
                 point = item.path.points[i];
                 item.transformedPoints[i] = translatePoint(point);
             }
