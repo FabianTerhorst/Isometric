@@ -156,7 +156,7 @@ isometricView.add(Shape.extrude(new Path(new Point[]{
 
 # License
 
-    Copyright 2017 Mike Penz
+    Copyright 2017 Fabian Terhorst
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
