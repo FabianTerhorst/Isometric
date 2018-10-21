@@ -114,7 +114,7 @@ public class Isometric {
         return color.lighten(brightness * this.colorDifference, this.lightColor);
     }
 
-    public void measure(int width, int height, boolean sort, boolean cull) {
+    public void measure(int width, int height, boolean sort, boolean cull, boolean boundsCheck) {
 
         //only perform measure operation:
         //if the bounds have changed
@@ -145,11 +145,9 @@ public class Isometric {
                 item.transformedPoints[i] = translatePoint(point);
             }
 
-            /**
-             * This greatly improves drawing speed
-             * Paths must be defined in a counter-clockwise rotation order
-             */
-            if ((cull && cullPath(item)) || !this.itemInDrawingBounds(item)) {
+            //remove item if not in view
+            //the if conditions here are ordered carefully to save computation, fail fast approach
+            if ((cull && cullPath(item)) || (boundsCheck && !this.itemInDrawingBounds(item))) {
                 //the path is invisible. It does not need to be considered any more
                 this.items.remove(itemIndex);
                 itemSize--;
