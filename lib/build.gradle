@@ -8,14 +8,14 @@ archivesBaseName = 'Isometric'
 project.screenshots.customTestRunner = true
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
-        versionCode 7
-        versionName "0.0.7"
+        targetSdkVersion 28
+        versionCode 8
+        versionName "0.0.8"
         testInstrumentationRunner 'io.fabianterhorst.isometric.screenshot.IsometricTestRunner'
     }
     buildTypes {
@@ -23,7 +23,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             defaultConfig {
-                targetSdkVersion 27
+                targetSdkVersion 28
             }
         }
         debug {
@@ -37,7 +37,7 @@ android {
 def siteUrl = 'https://github.com/FabianTerhorst/Isometric'
 def gitUrl = 'https://github.com/FabianTerhorst/Isometric.git'
 
-version = "0.0.7"
+version = "0.0.8"
 group = "io.fabianterhorst"
 
 install {
@@ -120,9 +120,9 @@ artifacts {
 }
 
 dependencies {
-    implementation 'com.android.support:support-annotations:27.1.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

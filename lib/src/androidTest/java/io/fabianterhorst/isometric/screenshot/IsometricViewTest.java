@@ -1,6 +1,6 @@
 package io.fabianterhorst.isometric.screenshot;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ import io.fabianterhorst.isometric.shapes.Prism;
 import io.fabianterhorst.isometric.shapes.Pyramid;
 import io.fabianterhorst.isometric.shapes.Stairs;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static io.fabianterhorst.isometric.screenshot.util.ScreenshotHelper.measureAndScreenshotView;
 
 /**
