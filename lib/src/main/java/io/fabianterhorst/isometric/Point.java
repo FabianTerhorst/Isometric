@@ -1,5 +1,7 @@
 package io.fabianterhorst.isometric;
 
+import java.util.Objects;
+
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -126,5 +128,22 @@ public class Point {
         double dz = p2.z - p1.z;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return Double.compare(point.x, x) == 0 &&
+                Double.compare(point.y, y) == 0 &&
+                Double.compare(point.z, z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return  Double.valueOf(x).hashCode() ^
+                Double.valueOf(y).hashCode() ^
+                Double.valueOf(z).hashCode() ;
     }
 }
