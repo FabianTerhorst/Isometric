@@ -385,5 +385,9 @@ public class Isometric {
             this.baseColor = baseColor;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
         }
+
+        public Path getPath() {
+            return path;
+        }
     }
 }
