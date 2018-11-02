@@ -22,7 +22,7 @@ public class IsometricView extends View {
 
     private OnItemClickListener listener;
 
-    private boolean sort = true, cull = false, boundsCheck = false;
+    private boolean sort = true, cull = false, boundsCheck = false, reverseSortForLookup = false;
 
     public IsometricView(Context context) {
         super(context);
@@ -45,6 +45,14 @@ public class IsometricView extends View {
      */
     public void setBoundsCheck(boolean boundsCheck) {
         this.boundsCheck = boundsCheck;
+    }
+
+    /**
+     * This items array is normally sorted back-to-front for drawing purposes. This allows the
+     * items array to be reversed when looking up which drawing item was touched.
+     */
+    public void setReverseSortForLookup(boolean reverseSortForLookup) {
+        this.reverseSortForLookup = reverseSortForLookup;
     }
 
     public void setClickListener(OnItemClickListener listener) {
@@ -99,7 +107,7 @@ public class IsometricView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                Isometric.Item item = isometric.findItemForPosition(new Point(event.getX(), event.getY()));
+                Isometric.Item item = isometric.findItemForPosition(new Point(event.getX(), event.getY()), this.reverseSortForLookup);
                 if (item != null) {
                     listener.onClick(item);
                 }

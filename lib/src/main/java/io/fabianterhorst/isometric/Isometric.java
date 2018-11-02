@@ -293,10 +293,23 @@ public class Isometric {
     //Todo: use android.grphics region object to check if point is inside region
     //Todo: use path.op to check if the path intersects with another path
     @Nullable
-    public Item findItemForPosition(Point position) {
-        //Todo: reverse sorting for click detection, because hidden object is getting drawed first und will be returned as the first as well
+    public Item findItemForPosition(Point position, boolean reverseSort) {
+        int iterateDirection = 1;
+        int startPos = 0;
+        int len = this.items.size();
+
+        //The items are already sorted back-to-front, by iterating the items list backwards
+        //you check the items closer to the user first
+        if (reverseSort){
+            iterateDirection *= -1;
+            startPos = len-1;
+        }
+
         //Items are already sorted for depth sort so break should not be a problem here
-        for (Item item : this.items) {
+        //iterate through the list in one direction or the other
+        for (int i = startPos; 0 <= i && i < len; i += iterateDirection) {
+            Item item = this.items.get(i);
+
             if (item.transformedPoints == null) continue;
             List<Point> items = new ArrayList<>();
             Point top = null,
