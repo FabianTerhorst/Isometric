@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 /**
@@ -294,21 +295,16 @@ public class Isometric {
     //Todo: use path.op to check if the path intersects with another path
     @Nullable
     public Item findItemForPosition(Point position, boolean reverseSort) {
-        int iterateDirection = 1;
-        int startPos = 0;
-        int len = this.items.size();
 
+        //get iterator for the items list, and start either at the front or back
         //The items are already sorted back-to-front, by iterating the items list backwards
         //you check the items closer to the user first
-        if (reverseSort){
-            iterateDirection *= -1;
-            startPos = len-1;
-        }
+        ListIterator<Item> itr = this.items.listIterator(reverseSort ? this.items.size() : 0);
 
         //Items are already sorted for depth sort so break should not be a problem here
         //iterate through the list in one direction or the other
-        for (int i = startPos; 0 <= i && i < len; i += iterateDirection) {
-            Item item = this.items.get(i);
+        while (reverseSort ? itr.hasPrevious() : itr.hasNext()) {
+            Item item = reverseSort ? itr.previous() : itr.next();
 
             if (item.transformedPoints == null) continue;
             List<Point> items = new ArrayList<>();
