@@ -18,7 +18,6 @@ public class IntersectionUtils {
             if (j == len)
                 j=0;
 
-            //algorithm from https://stackoverflow.com/a/1501725/3344317
             Point v = poly.get(i);
             Point w = poly.get(j);
 

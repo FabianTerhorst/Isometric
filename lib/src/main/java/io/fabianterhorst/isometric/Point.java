@@ -156,6 +156,7 @@ public class Point {
 
     /**
      * Distance between a point p and a line segment vw
+     * algorithm from https://stackoverflow.com/a/1501725/3344317
      */
     public static double distancetoSegment(Point p, Point v, Point w) {
         return Math.sqrt(distanceToSegmentSquared(p, v, w));
