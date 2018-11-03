@@ -57,12 +57,17 @@ public class IsometricView extends View {
         this.reverseSortForLookup = reverseSortForLookup;
     }
 
-    //allow the click lookup to consider a touch region defined by a circle instead of a fixed point
+    /**
+     * Allow the click lookup to consider a touch region defined by a circle instead of a fixed point
+     */
     public void setTouchRadiusLookup(boolean touchRadiusLookup) {
         this.touchRadiusLookup = touchRadiusLookup;
     }
 
-    //size in screen pixels
+    /**
+     * Radius of circular region with the center being the click event location.
+     * Size in screen pixels.
+     */
     public void setTouchRadius(double touchRadius) {
         this.touchRadius = touchRadius;
     }
@@ -120,8 +125,7 @@ public class IsometricView extends View {
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 Isometric.Item item = isometric.findItemForPosition(
-                        new Point(event.getX(),
-                        event.getY()),
+                        new Point(event.getX(), event.getY()),
                         this.reverseSortForLookup,
                         this.touchRadiusLookup,
                         this.touchRadius

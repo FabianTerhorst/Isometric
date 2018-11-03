@@ -372,8 +372,10 @@ public class Isometric {
             }
 
             //perform one method of touch position lookup
-            if ( (touchPosition && IntersectionUtils.isPointCloseToPoly(items, position.x, position.y, radius)) || IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
-
+            //it is faster to check the individual segments first (disabled by default).
+            // its possible the touch center is inside poly, but not close to
+            // an edge so finish by checking if center of circle is in poly
+            if ((touchPosition && IntersectionUtils.isPointCloseToPoly(items, position.x, position.y, radius)) || IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
                 return item;
             }
         }

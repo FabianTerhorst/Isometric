@@ -29,10 +29,7 @@ public class IntersectionUtils {
             }
         }
 
-        //it is faster to check the individual segments first.
-        // its possible the touch center is inside poly, but not close to
-        // an edge so finish by checking if center of circle is in poly
-        return isPointInPoly(poly, x, y);
+        return false;
     }
 
     public static boolean isPointInPoly(List<Point> poly, double x, double y) {
