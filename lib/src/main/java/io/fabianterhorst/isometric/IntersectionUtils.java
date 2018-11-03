@@ -8,6 +8,33 @@ public class IntersectionUtils {
 
     }
 
+    public static boolean isPointCloseToPoly(List<Point> poly, double x, double y, double radius) {
+
+        Point p = new Point(x,y);
+
+        //iterate over each line segment
+        for (int i = 0, j = i + 1, len = poly.size();i < len; i++) {
+            //make j wrap around to front
+            if (j == len)
+                j=0;
+
+            //algorithm from https://stackoverflow.com/a/1501725/3344317
+            Point v = poly.get(i);
+            Point w = poly.get(j);
+
+            double dist = Point.distancetoSegment(p, v, w);
+
+            if (dist < radius){
+                return true;
+            }
+        }
+
+        //it is faster to check the individual segments first.
+        // its possible the touch center is inside poly, but not close to
+        // an edge so finish by checking if center of circle is in poly
+        return isPointInPoly(poly, x, y);
+    }
+
     public static boolean isPointInPoly(List<Point> poly, double x, double y) {
         boolean c = false;
         for (int i = -1, l = poly.size(), j = l - 1; ++i < l; j = i) {

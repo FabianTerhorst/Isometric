@@ -122,12 +122,47 @@ public class Point {
     /**
      * Distance between two points
      */
-    public double distance(Point p1, Point p2) {
+    public static double distance(Point p1, Point p2) {
         double dx = p2.x - p1.x;
         double dy = p2.y - p1.y;
         double dz = p2.z - p1.z;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    /**
+     * Distance between two points without the square root
+     */
+    public static double distance2(Point p1, Point p2) {
+        double dx = p2.x - p1.x;
+        double dy = p2.y - p1.y;
+        double dz = p2.z - p1.z;
+
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    /**
+     * Distance between a point p and a line segment vw without the square root
+     */
+    public static double distanceToSegmentSquared(Point p, Point v, Point w) {
+        double l2 = Point.distance2(v,w);
+        if (l2 == 0)
+            return Point.distance2(p, v);
+
+        double t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+        if (t < 0)
+            return Point.distance2(p, v);
+        if (t > 1)
+            return Point.distance2(p, w);
+
+        return Point.distance2(p, new Point(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
+    }
+
+    /**
+     * Distance between a point p and a line segment vw
+     */
+    public static double distancetoSegment(Point p, Point v, Point w) {
+        return Math.sqrt(distanceToSegmentSquared(p, v, w));
     }
 
     @Override

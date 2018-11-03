@@ -294,7 +294,7 @@ public class Isometric {
     //Todo: use android.grphics region object to check if point is inside region
     //Todo: use path.op to check if the path intersects with another path
     @Nullable
-    public Item findItemForPosition(Point position, boolean reverseSort) {
+    public Item findItemForPosition(Point position, boolean reverseSort, boolean touchPosition, double radius) {
 
         //get iterator for the items list, and start either at the front or back
         //The items are already sorted back-to-front, by iterating the items list backwards
@@ -371,7 +371,9 @@ public class Isometric {
                 }
             }
 
-            if (IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
+            //perform one method of touch position lookup
+            if ( (touchPosition && IntersectionUtils.isPointCloseToPoly(items, position.x, position.y, radius)) || IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
+
                 return item;
             }
         }

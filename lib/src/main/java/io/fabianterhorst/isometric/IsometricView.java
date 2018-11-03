@@ -22,7 +22,9 @@ public class IsometricView extends View {
 
     private OnItemClickListener listener;
 
-    private boolean sort = true, cull = false, boundsCheck = false, reverseSortForLookup = false;
+    private boolean sort = true, cull = false, boundsCheck = false, reverseSortForLookup = false, touchRadiusLookup = false;
+
+    private double touchRadius = 1;
 
     public IsometricView(Context context) {
         super(context);
@@ -53,6 +55,16 @@ public class IsometricView extends View {
      */
     public void setReverseSortForLookup(boolean reverseSortForLookup) {
         this.reverseSortForLookup = reverseSortForLookup;
+    }
+
+    //allow the click lookup to consider a touch region defined by a circle instead of a fixed point
+    public void setTouchRadiusLookup(boolean touchRadiusLookup) {
+        this.touchRadiusLookup = touchRadiusLookup;
+    }
+
+    //size in screen pixels
+    public void setTouchRadius(double touchRadius) {
+        this.touchRadius = touchRadius;
     }
 
     public void setClickListener(OnItemClickListener listener) {
@@ -107,7 +119,14 @@ public class IsometricView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                Isometric.Item item = isometric.findItemForPosition(new Point(event.getX(), event.getY()), this.reverseSortForLookup);
+                Isometric.Item item = isometric.findItemForPosition(
+                        new Point(event.getX(),
+                        event.getY()),
+                        this.reverseSortForLookup,
+                        this.touchRadiusLookup,
+                        this.touchRadius
+                );
+
                 if (item != null) {
                     listener.onClick(item);
                 }
