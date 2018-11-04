@@ -1,5 +1,7 @@
 package io.fabianterhorst.isometric;
 
+import java.util.Arrays;
+
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -211,5 +213,18 @@ public class Shape {
         }
         shape.setPaths(paths);
         return shape;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Shape)) return false;
+        Shape shape = (Shape) o;
+        return Arrays.equals(paths, shape.paths);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(paths);
     }
 }

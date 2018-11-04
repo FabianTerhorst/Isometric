@@ -65,7 +65,11 @@ public class Isometric {
     }
 
     public void add(Path path, Color color) {
-        addPath(path, color);
+        addPath(path, color, null);
+    }
+
+    public void add(Path path, Color color, Shape originalShape) {
+        addPath(path, color, originalShape);
     }
 
     public void add(Path[] paths, Color color) {
@@ -74,12 +78,18 @@ public class Isometric {
         }
     }
 
+    public void add(Path[] paths, Color color, Shape originalShape) {
+        for (Path path : paths) {
+            add(path, color, originalShape);
+        }
+    }
+
     public void add(Shape shape, Color color) {
         /* Fetch paths ordered by distance to prevent overlaps */
         Path[] paths = shape.orderedPaths();
 
         for (Path path : paths) {
-            addPath(path, color);
+            addPath(path, color, shape);
         }
     }
 
@@ -88,9 +98,9 @@ public class Isometric {
         items.clear();
     }
 
-    private void addPath(Path path, Color color) {
+    private void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, transformColor(path, color)));
+        this.items.add(new Item(path, transformColor(path, color), originalShape));
     }
 
     /*private Color transformColor(Path path, Color color) {
@@ -375,6 +385,7 @@ public class Isometric {
         Path path;
         Color baseColor;
         Paint paint;
+        Shape originalShape;
         int drawn;
         Point[] transformedPoints;
         android.graphics.Path drawPath;
@@ -386,9 +397,10 @@ public class Isometric {
             this.paint = item.paint;
             this.path = item.path;
             this.baseColor = item.baseColor;
+            this.originalShape = item.originalShape;
         }
 
-        Item(Path path, Color baseColor) {
+        Item(Path path, Color baseColor, Shape originalShape) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -396,11 +408,16 @@ public class Isometric {
             this.paint.setStrokeWidth(1);
             this.path = path;
             this.baseColor = baseColor;
+            this.originalShape = originalShape;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
         }
 
         public Path getPath() {
             return path;
+        }
+
+        public Shape getOriginalShape() {
+            return originalShape;
         }
     }
 }
