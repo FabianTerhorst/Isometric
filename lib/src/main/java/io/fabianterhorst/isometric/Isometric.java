@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by fabianterhorst on 31.03.17.
@@ -64,7 +65,11 @@ public class Isometric {
     }
 
     public void add(Path path, Color color) {
-        addPath(path, color);
+        addPath(path, color, null);
+    }
+
+    public void add(Path path, Color color, Shape originalShape) {
+        addPath(path, color, originalShape);
     }
 
     public void add(Path[] paths, Color color) {
@@ -73,12 +78,18 @@ public class Isometric {
         }
     }
 
+    public void add(Path[] paths, Color color, Shape originalShape) {
+        for (Path path : paths) {
+            add(path, color, originalShape);
+        }
+    }
+
     public void add(Shape shape, Color color) {
         /* Fetch paths ordered by distance to prevent overlaps */
         Path[] paths = shape.orderedPaths();
 
         for (Path path : paths) {
-            addPath(path, color);
+            addPath(path, color, shape);
         }
     }
 
@@ -87,9 +98,9 @@ public class Isometric {
         items.clear();
     }
 
-    private void addPath(Path path, Color color) {
+    private void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, transformColor(path, color)));
+        this.items.add(new Item(path, transformColor(path, color), originalShape));
     }
 
     /*private Color transformColor(Path path, Color color) {
@@ -282,10 +293,18 @@ public class Isometric {
     //Todo: use android.grphics region object to check if point is inside region
     //Todo: use path.op to check if the path intersects with another path
     @Nullable
-    public Item findItemForPosition(Point position) {
-        //Todo: reverse sorting for click detection, because hidden object is getting drawed first und will be returned as the first as well
+    public Item findItemForPosition(Point position, boolean reverseSort, boolean touchPosition, double radius) {
+
+        //get iterator for the items list, and start either at the front or back
+        //The items are already sorted back-to-front, by iterating the items list backwards
+        //you check the items closer to the user first
+        ListIterator<Item> itr = this.items.listIterator(reverseSort ? this.items.size() : 0);
+
         //Items are already sorted for depth sort so break should not be a problem here
-        for (Item item : this.items) {
+        //iterate through the list in one direction or the other
+        while (reverseSort ? itr.hasPrevious() : itr.hasNext()) {
+            Item item = reverseSort ? itr.previous() : itr.next();
+
             if (item.transformedPoints == null) continue;
             List<Point> items = new ArrayList<>();
             Point top = null,
@@ -351,7 +370,11 @@ public class Isometric {
                 }
             }
 
-            if (IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
+            //perform one method of touch position lookup
+            //it is faster to check the individual segments first (disabled by default).
+            // its possible the touch center is inside poly, but not close to
+            // an edge so finish by checking if center of circle is in poly
+            if ((touchPosition && IntersectionUtils.isPointCloseToPoly(items, position.x, position.y, radius)) || IntersectionUtils.isPointInPoly(items, position.x, position.y)) {
                 return item;
             }
         }
@@ -362,6 +385,7 @@ public class Isometric {
         Path path;
         Color baseColor;
         Paint paint;
+        Shape originalShape;
         int drawn;
         Point[] transformedPoints;
         android.graphics.Path drawPath;
@@ -373,9 +397,10 @@ public class Isometric {
             this.paint = item.paint;
             this.path = item.path;
             this.baseColor = item.baseColor;
+            this.originalShape = item.originalShape;
         }
 
-        Item(Path path, Color baseColor) {
+        Item(Path path, Color baseColor, Shape originalShape) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -383,7 +408,16 @@ public class Isometric {
             this.paint.setStrokeWidth(1);
             this.path = path;
             this.baseColor = baseColor;
+            this.originalShape = originalShape;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
+        }
+
+        public Path getPath() {
+            return path;
+        }
+
+        public Shape getOriginalShape() {
+            return originalShape;
         }
     }
 }

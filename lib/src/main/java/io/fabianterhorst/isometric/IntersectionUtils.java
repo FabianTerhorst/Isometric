@@ -8,6 +8,29 @@ public class IntersectionUtils {
 
     }
 
+    public static boolean isPointCloseToPoly(List<Point> poly, double x, double y, double radius) {
+
+        Point p = new Point(x,y);
+
+        //iterate over each line segment
+        for (int i = 0, j = i + 1, len = poly.size();i < len; i++) {
+            //make j wrap around to front
+            if (j == len)
+                j=0;
+
+            Point v = poly.get(i);
+            Point w = poly.get(j);
+
+            double dist = Point.distancetoSegment(p, v, w);
+
+            if (dist < radius){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean isPointInPoly(List<Point> poly, double x, double y) {
         boolean c = false;
         for (int i = -1, l = poly.size(), j = l - 1; ++i < l; j = i) {
