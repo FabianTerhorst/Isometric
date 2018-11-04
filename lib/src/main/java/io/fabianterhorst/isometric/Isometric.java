@@ -157,7 +157,6 @@ public class Isometric {
 
             int pointsLength = item.path.points.length;
             item.transformedPoints = new Point[pointsLength];
-            //TODO: maybe add transformedPolymer as well and add the first to the end, for more efficient intersection
 
             if (!item.drawPath.isEmpty()) {
                 item.drawPath.rewind();//Todo: test if .reset is not needed and rewind is enough
