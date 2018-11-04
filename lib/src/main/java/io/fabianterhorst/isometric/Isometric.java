@@ -23,11 +23,9 @@ public class Isometric {
 
     private List<Item> items = new ArrayList<>();
 
-    private final Vector lightAngle;
+    static final Vector lightAngle = new Vector(2, -1, 3).normalize();
 
-    private final double colorDifference;
-
-    private final Color lightColor;
+    static final Color lightColor = new Color(255, 255, 255);
 
     private int currentWidth, currentHeight;
 
@@ -44,10 +42,6 @@ public class Isometric {
                 {
                         this.scale * Math.cos(Math.PI - this.angle),
                         this.scale * Math.sin(Math.PI - this.angle)}};
-        Vector lightPosition = new Vector(2, -1, 3);
-        this.lightAngle = lightPosition.normalize();
-        this.colorDifference = 0.20;
-        this.lightColor = new Color(255, 255, 255);
         this.currentWidth = -1;
         this.currentHeight = -1;
         this.itemsChanged = true;
@@ -95,44 +89,12 @@ public class Isometric {
 
     public void clear() {
         this.itemsChanged = true;
-        items.clear();
+        this.items.clear();
     }
 
     private void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, transformColor(path, color), originalShape));
-    }
-
-    /*private Color transformColor(Path path, Color color) {
-        Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
-        Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
-
-        Vector normal = Vector.crossProduct(v1, v2).normalize();
-
-        double brightness = Vector.dotProduct(normal, this.lightAngle);
-        return color.lighten(brightness * this.colorDifference, this.lightColor);
-    }*/
-
-    private Color transformColor(Path path, Color color) {
-        Point p1 = path.points[1];
-        Point p2 = path.points[0];
-        double i = p2.x - p1.x;
-        double j = p2.y - p1.y;
-        double k = p2.z - p1.z;
-        p1 = path.points[2];
-        p2 = path.points[1];
-        double i2 = p2.x - p1.x;
-        double j2 = p2.y - p1.y;
-        double k2 = p2.z - p1.z;
-        double i3 = j * k2 - j2 * k;
-        double j3 = -1 * (i * k2 - i2 * k);
-        double k3 = i * j2 - i2 * j;
-        double magnitude = Math.sqrt(i3 * i3 + j3 * j3 + k3 * k3);
-        i = magnitude == 0 ? 0 : i3 / magnitude;
-        j = magnitude == 0 ? 0 : j3 / magnitude;
-        k = magnitude == 0 ? 0 : k3 / magnitude;
-        double brightness = i * lightAngle.i + j * lightAngle.j + k * lightAngle.k;
-        return color.lighten(brightness * this.colorDifference, this.lightColor);
+        this.items.add(new Item(path, Color.transformColor(path, color), originalShape));
     }
 
     public void measure(int width, int height, boolean sort, boolean cull, boolean boundsCheck) {
