@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.UUID;
 
 /**
  * Created by fabianterhorst on 31.03.17.
@@ -66,22 +65,12 @@ public class Isometric {
     }
 
     public void add(Path path, Color color) {
-        addPath(path, color, null);
-    }
-
-    public void add(Path path, Color color, UUID shapeIdentifier) {
-        addPath(path, color, shapeIdentifier);
+        addPath(path, color);
     }
 
     public void add(Path[] paths, Color color) {
         for (Path path : paths) {
-            add(path, color, null);
-        }
-    }
-
-    public void add(Path[] paths, Color color, UUID shapeIdentifier) {
-        for (Path path : paths) {
-            add(path, color, shapeIdentifier);
+            add(path, color);
         }
     }
 
@@ -90,7 +79,7 @@ public class Isometric {
         Path[] paths = shape.orderedPaths();
 
         for (Path path : paths) {
-            addPath(path, color, shape.getIdentifier());
+            addPath(path, color);
         }
     }
 
@@ -99,9 +88,9 @@ public class Isometric {
         items.clear();
     }
 
-    private void addPath(Path path, Color color, UUID shapeIdentifier) {
+    private void addPath(Path path, Color color) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, transformColor(path, color), shapeIdentifier));
+        this.items.add(new Item(path, transformColor(path, color)));
     }
 
     /*private Color transformColor(Path path, Color color) {
@@ -387,8 +376,6 @@ public class Isometric {
         Color baseColor;
         Paint paint;
         int drawn;
-        //use this field to associate a drawn item with some shape. (...click event?)
-        UUID shapeIdentifier;
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
@@ -399,10 +386,9 @@ public class Isometric {
             this.paint = item.paint;
             this.path = item.path;
             this.baseColor = item.baseColor;
-            this.shapeIdentifier = item.shapeIdentifier;
         }
 
-        Item(Path path, Color baseColor, UUID shapeIdentifier) {
+        Item(Path path, Color baseColor) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -410,16 +396,11 @@ public class Isometric {
             this.paint.setStrokeWidth(1);
             this.path = path;
             this.baseColor = baseColor;
-            this.shapeIdentifier = shapeIdentifier;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
         }
 
         public Path getPath() {
             return path;
-        }
-
-        public UUID getShapeIdentifier() {
-            return shapeIdentifier;
         }
     }
 }

@@ -1,7 +1,5 @@
 package io.fabianterhorst.isometric;
 
-import java.util.UUID;
-
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -10,14 +8,10 @@ public class Shape {
 
     private Path[] paths;
 
-    private UUID identifier;
-
     public Shape() {
-        identifier = UUID.randomUUID();
     }
 
     public Shape(Path[] paths) {
-        identifier = UUID.randomUUID();
         this.paths = paths;
     }
 
@@ -55,10 +49,6 @@ public class Shape {
 
     public Path[] getPaths() {
         return paths;
-    }
-
-    public UUID getIdentifier() {
-        return identifier;
     }
 
     public Shape translate(double dx, double dy, double dz) {
