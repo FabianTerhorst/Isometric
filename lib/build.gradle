@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 8
-        versionName "0.0.8"
+        versionCode 9
+        versionName "0.0.9"
         testInstrumentationRunner 'io.fabianterhorst.isometric.screenshot.IsometricTestRunner'
     }
     buildTypes {
@@ -37,7 +37,7 @@ android {
 def siteUrl = 'https://github.com/FabianTerhorst/Isometric'
 def gitUrl = 'https://github.com/FabianTerhorst/Isometric.git'
 
-version = "0.0.8"
+version = "0.0.9"
 group = "io.fabianterhorst"
 
 install {
@@ -120,7 +120,7 @@ artifacts {
 }
 
 dependencies {
-    implementation 'androidx.annotation:annotation:1.0.0'
+    compileOnly 'androidx.annotation:annotation:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
         exclude group: 'com.android.support', module: 'support-annotations'
