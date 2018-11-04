@@ -164,29 +164,28 @@ public class Path {
      * If pathB ("this") is closer from the observer than pathA, it must be drawn after.
      * It is closer if one of its vertices and the observer are on the same side of the plane defined by pathA.
      */
-    public int closerThan(Path pathA, Point observer) {
-        return pathA.countCloserThan(this, observer) - this.countCloserThan(pathA, observer);
+    public int closerThan(Path pathA, Point observer, double[] v1, double[] v2, double[] v3, double[] v4, double[] v5, double[] v6) {
+        return pathA.countCloserThan(v1, v2, v3, this, observer) - this.countCloserThan(v4, v5, v6, pathA, observer);
     }
 
-    public int countCloserThan(Path pathA, Point observer) {
+    public int countCloserThan(double[] v1, double[] v2, double[] v3, Path pathA, Point observer) {
         // the plane containing pathA is defined by the three points A, B, C
-        Vector AB = Vector.fromTwoPoints(pathA.points[0], pathA.points[1]);
-        Vector AC = Vector.fromTwoPoints(pathA.points[0], pathA.points[2]);
-        Vector n = Vector.crossProduct(AB, AC);
-
-        Vector OA = Vector.fromTwoPoints(Point.ORIGIN, pathA.points[0]);
-        Vector OU = Vector.fromTwoPoints(Point.ORIGIN, observer); //U = user = observer
+        Vector3.fromTwoPoints(v1, pathA.points[0], pathA.points[1]);
+        Vector3.fromTwoPoints(v2, pathA.points[0], pathA.points[2]);
+        Vector3.crossProduct(v1, v2); // v1 is now cross product
+        Vector3.fromTwoPoints(v2, Point.ORIGIN, pathA.points[0]);
+        Vector3.fromTwoPoints(v3, Point.ORIGIN, observer);
 
         // Plane defined by pathA such as ax + by + zc = d
         // Here d = nx*x + ny*y + nz*z = n.OA
-        double d = Vector.dotProduct(n, OA);
-        double observerPosition = Vector.dotProduct(n, OU) - d;
+        double d = Vector3.dotProduct(v1, v2);
+        double observerPosition = Vector3.dotProduct(v1, v3) - d;
         int result = 0;
         int result0 = 0;
         int length = this.points.length;
         for (int i = 0; i < length; i++) {
-            Vector OP = Vector.fromTwoPoints(Point.ORIGIN, this.points[i]);
-            double pPosition = Vector.dotProduct(n, OP) - d;
+            Vector3.fromTwoPoints(v3, Point.ORIGIN, this.points[i]);
+            double pPosition = Vector3.dotProduct(v1, v3) - d;
             if (observerPosition * pPosition >= 0.000000001) { //careful with rounding approximations
                 result++;
             }

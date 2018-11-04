@@ -10,20 +10,20 @@ public class IntersectionUtils {
 
     public static boolean isPointCloseToPoly(List<Point> poly, double x, double y, double radius) {
 
-        Point p = new Point(x,y);
+        Point p = new Point(x, y);
 
         //iterate over each line segment
-        for (int i = 0, j = i + 1, len = poly.size();i < len; i++) {
+        for (int i = 0, j = i + 1, len = poly.size(); i < len; i++) {
             //make j wrap around to front
             if (j == len)
-                j=0;
+                j = 0;
 
             Point v = poly.get(i);
             Point w = poly.get(j);
 
             double dist = Point.distancetoSegment(p, v, w);
 
-            if (dist < radius){
+            if (dist < radius) {
                 return true;
             }
         }
@@ -53,7 +53,9 @@ public class IntersectionUtils {
         return c;
     }
 
-    public static boolean hasIntersection(Point[] pointsA, Point[] pointsB) {
+    public static boolean hasIntersection(Point[] pointsA, Point[] pointsB, Point[] polyA, Point[] polyB,
+                                          double[] deltaAX, double[] deltaBX, double[] deltaAY, double[] deltaBY,
+                                          double[] rA, double[] rB) {
         int i, j, lengthA = pointsA.length, lengthB = pointsB.length, lengthPolyA, lengthPolyB;
         double AminX = pointsA[0].x;
         double AminY = pointsA[0].y;
@@ -84,35 +86,9 @@ public class IntersectionUtils {
         if (((AminX <= BminX && BminX <= AmaxX) || (BminX <= AminX && AminX <= BmaxX)) &&
                 ((AminY <= BminY && BminY <= AmaxY) || (BminY <= AminY && AminY <= BmaxY))) {
             // now let's be more specific
-            Point[] polyA = Path.add(pointsA[0], pointsA);
-            Point[] polyB = Path.add(pointsB[0], pointsB);
-
             // see if edges cross, or one contained in the other
             lengthPolyA = polyA.length;
             lengthPolyB = polyB.length;
-
-            double[] deltaAX = new double[lengthPolyA];
-            double[] deltaAY = new double[lengthPolyA];
-            double[] deltaBX = new double[lengthPolyB];
-            double[] deltaBY = new double[lengthPolyB];
-
-            double[] rA = new double[lengthPolyA];
-            double[] rB = new double[lengthPolyB];
-
-            for (i = 0; i <= lengthPolyA - 2; i++) {
-                point = polyA[i];
-                deltaAX[i] = polyA[i + 1].x - point.x;
-                deltaAY[i] = polyA[i + 1].y - point.y;
-                //equation written as deltaY.x - deltaX.y + r = 0
-                rA[i] = deltaAX[i] * point.y - deltaAY[i] * point.x;
-            }
-
-            for (i = 0; i <= lengthPolyB - 2; i++) {
-                point = polyB[i];
-                deltaBX[i] = polyB[i + 1].x - point.x;
-                deltaBY[i] = polyB[i + 1].y - point.y;
-                rB[i] = deltaBX[i] * point.y - deltaBY[i] * point.x;
-            }
 
             for (i = 0; i <= lengthPolyA - 2; i++) {
                 for (j = 0; j <= lengthPolyB - 2; j++) {

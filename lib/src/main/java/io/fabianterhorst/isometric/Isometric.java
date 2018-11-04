@@ -2,6 +2,7 @@ package io.fabianterhorst.isometric;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -154,14 +155,16 @@ public class Isometric {
         while (itemIndex < itemSize) {
             Item item = items.get(itemIndex);
 
-            item.transformedPoints = new Point[item.path.points.length];
+            int pointsLength = item.path.points.length;
+            item.transformedPoints = new Point[pointsLength];
+            //TODO: maybe add transformedPolymer as well and add the first to the end, for more efficient intersection
 
             if (!item.drawPath.isEmpty()) {
                 item.drawPath.rewind();//Todo: test if .reset is not needed and rewind is enough
             }
 
             Point point;
-            for (int i = 0, length = item.path.points.length; i < length; i++) {
+            for (int i = 0; i < pointsLength; i++) {
                 point = item.path.points[i];
                 item.transformedPoints[i] = translatePoint(point);
             }
@@ -173,9 +176,7 @@ public class Isometric {
                 this.items.remove(itemIndex);
                 itemSize--;
                 continue;
-            }
-            else
-            {
+            } else {
                 itemIndex++;
             }
 
@@ -186,6 +187,25 @@ public class Isometric {
             }
 
             item.drawPath.close();
+
+            if (sort) {
+                int polymerLength = pointsLength > 0 ? pointsLength + 1 : 0;
+                item.transformedPolymer = new Point[polymerLength];
+                System.arraycopy(item.transformedPoints, 0, item.transformedPolymer, 0, pointsLength);
+                if (pointsLength > 0) {
+                    item.transformedPolymer[pointsLength] = item.transformedPoints[0];
+                }
+                item.deltaX = new double[polymerLength];
+                item.deltaY = new double[polymerLength];
+                item.r = new double[polymerLength];
+                for (int i = 0; i <= polymerLength - 2; i++) {
+                    point = item.transformedPolymer[i];
+                    item.deltaX[i] = item.transformedPolymer[i + 1].x - point.x;
+                    item.deltaY[i] = item.transformedPolymer[i + 1].y - point.y;
+                    //equation written as deltaY.x - deltaX.y + r = 0
+                    item.r[i] = item.deltaX[i] * point.y - item.deltaY[i] * point.x;
+                }
+            }
         }
 
         if (sort) {
@@ -207,19 +227,24 @@ public class Isometric {
     }
 
     private boolean itemInDrawingBounds(Item item) {
-        for (int i = 0, len = item.transformedPoints.length; i< len; i++)
-        {
+        for (int i = 0, len = item.transformedPoints.length; i < len; i++) {
             //if any point is in bounds, the item is worth drawing
             if (item.transformedPoints[i].getX() >= 0 &&
-                item.transformedPoints[i].getX() <= this.currentWidth  &&
-                item.transformedPoints[i].getY() >= 0 &&
-                item.transformedPoints[i].getY() <= this.currentHeight)
+                    item.transformedPoints[i].getX() <= this.currentWidth &&
+                    item.transformedPoints[i].getY() >= 0 &&
+                    item.transformedPoints[i].getY() <= this.currentHeight)
                 return true;
         }
         return false;
     }
 
     private List<Item> sortPaths() {
+        double[] v1 = Vector3.create();
+        double[] v2 = Vector3.create();
+        double[] v3 = Vector3.create();
+        double[] v4 = Vector3.create();
+        double[] v5 = Vector3.create();
+        double[] v6 = Vector3.create();
         ArrayList<Item> sortedItems = new ArrayList<>();
         Point observer = new Point(-10, -10, 20);
         int length = items.size();
@@ -233,8 +258,12 @@ public class Isometric {
             itemA = items.get(i);
             for (int j = 0; j < i; j++) {
                 itemB = items.get(j);
-                if (IntersectionUtils.hasIntersection(itemA.transformedPoints, itemB.transformedPoints)) {
-                    int cmpPath = itemA.path.closerThan(itemB.path, observer);
+                if (IntersectionUtils.hasIntersection(itemA.transformedPoints, itemB.transformedPoints,
+                        itemA.transformedPolymer, itemB.transformedPolymer,
+                        itemA.deltaX, itemB.deltaX,
+                        itemA.deltaY, itemB.deltaY,
+                        itemA.r, itemB.r)) {
+                    int cmpPath = itemA.path.closerThan(itemB.path, observer, v1, v2, v3, v4, v5, v6);
                     if (cmpPath < 0) {
                         drawBefore.get(i).add(j);
                     } else if (cmpPath > 0) {
@@ -388,10 +417,17 @@ public class Isometric {
         Shape originalShape;
         int drawn;
         Point[] transformedPoints;
+        // Same as transformedPoints but the last point is the same as the first point
+        Point[] transformedPolymer;
+        double[] deltaX, deltaY, r;
         android.graphics.Path drawPath;
 
         Item(Item item) {
             this.transformedPoints = item.transformedPoints;
+            this.transformedPolymer = item.transformedPolymer;
+            this.deltaX = item.deltaX;
+            this.deltaY = item.deltaY;
+            this.r = item.r;
             this.drawPath = item.drawPath;
             this.drawn = item.drawn;
             this.paint = item.paint;
