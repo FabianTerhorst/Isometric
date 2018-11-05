@@ -301,8 +301,7 @@ public class Isometric {
                         }
                     }
                     if (canDraw == 1) {
-                        Item item = new Item(currItem);
-                        sortedItems.add(item);
+                        sortedItems.add(new Item(currItem));
                         currItem.drawn = 1;
                         items.set(i, currItem);
                         drawThisTurn = 1;
@@ -322,11 +321,6 @@ public class Isometric {
 
     public void draw(Canvas canvas) {
         for (Item item : items) {
-            /*this.ctx.globalAlpha = color.a;
-            this.ctx.fillStyle = this.ctx.strokeStyle = color.toHex();
-            this.ctx.stroke();
-            this.ctx.fill();
-            this.ctx.restore();*/
             canvas.drawPath(item.drawPath, item.paint);
         }
     }
