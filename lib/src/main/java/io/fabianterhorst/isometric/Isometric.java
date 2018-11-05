@@ -112,6 +112,23 @@ public class Isometric {
         this.originX = width / 2;
         this.originY = height * 0.9;
 
+        transformItems(this.items, cull, boundsCheck);
+
+        if (sort) {
+            this.items = sortPaths();
+        }
+    }
+
+    //allow user to recalculate only certain items
+    public void updateItems(List<Item> items, boolean cull, boolean boundsCheck) {
+        //only want to update these items instead of all items
+        //this.itemsChanged = true;
+        transformItems(items, cull, boundsCheck);
+    }
+
+    //allow user to update particular items
+    public void transformItems(List<Item> items, boolean cull, boolean boundsCheck) {
+
         int itemIndex = 0, itemSize = items.size();
         while (itemIndex < itemSize) {
             Item item = items.get(itemIndex);
@@ -149,10 +166,10 @@ public class Isometric {
 
             item.drawPath.close();
         }
+    }
 
-        if (sort) {
-            this.items = sortPaths();
-        }
+    public List<Item> getCurrentItems() {
+        return this.items;
     }
 
     private boolean cullPath(Item item) {
@@ -352,7 +369,7 @@ public class Isometric {
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
-        Item(Item item) {
+        public Item(Item item) {
             this.transformedPoints = item.transformedPoints;
             this.drawPath = item.drawPath;
             this.drawn = item.drawn;
@@ -362,7 +379,7 @@ public class Isometric {
             this.originalShape = item.originalShape;
         }
 
-        Item(Path path, Color baseColor, Shape originalShape) {
+        public Item(Path path, Color baseColor, Shape originalShape) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);

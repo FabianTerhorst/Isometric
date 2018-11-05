@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.List;
+
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -70,6 +72,17 @@ public class IsometricView extends View {
      */
     public void setTouchRadius(double touchRadius) {
         this.touchRadius = touchRadius;
+    }
+
+    //allow user to set current items with the option to re-measure again or not
+    public void updateItems(List<Isometric.Item> items) {
+        if (items != null){
+            this.isometric.updateItems(items, this.cull, this.boundsCheck);
+        }
+    }
+
+    public List<Isometric.Item> getCurrentItems() {
+        return this.isometric.getCurrentItems();
     }
 
     public void setClickListener(OnItemClickListener listener) {
