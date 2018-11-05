@@ -253,6 +253,9 @@ public class Isometric {
         }
         Item itemA;
         Item itemB;
+        int[] oldArray;
+        int oldLength;
+        int[] newDrawBefore;
         for (int i = 0; i < length; i++) {
             itemA = items.get(i);
             for (int j = 0; j < i; j++) {
@@ -264,16 +267,16 @@ public class Isometric {
                         itemA.r, itemB.r)) {
                     int cmpPath = itemA.path.closerThan(itemB.path, observer, v1, v2, v3, v4, v5, v6);
                     if (cmpPath < 0) {
-                        int[] oldArray = drawBefore[i];
-                        int oldLength = oldArray.length;
-                        int[] newDrawBefore = new int[oldLength + 1];
+                        oldArray = drawBefore[i];
+                        oldLength = oldArray.length;
+                        newDrawBefore = new int[oldLength + 1];
                         System.arraycopy(oldArray, 0, newDrawBefore, 0, oldLength);
                         newDrawBefore[oldLength] = j;
                         drawBefore[i] = newDrawBefore;
                     } else if (cmpPath > 0) {
-                        int[] oldArray = drawBefore[j];
-                        int oldLength = oldArray.length;
-                        int[] newDrawBefore = new int[oldLength + 1];
+                        oldArray = drawBefore[j];
+                        oldLength = oldArray.length;
+                        newDrawBefore = new int[oldLength + 1];
                         System.arraycopy(oldArray, 0, newDrawBefore, 0, oldLength);
                         newDrawBefore[oldLength] = j;
                         drawBefore[j] = newDrawBefore;
