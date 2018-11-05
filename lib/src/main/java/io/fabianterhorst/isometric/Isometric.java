@@ -278,7 +278,7 @@ public class Isometric {
                         oldLength = oldArray.length;
                         newDrawBefore = new int[oldLength + 1];
                         System.arraycopy(oldArray, 0, newDrawBefore, 0, oldLength);
-                        newDrawBefore[oldLength] = j;
+                        newDrawBefore[oldLength] = i;
                         drawBefore[j] = newDrawBefore;
                     }
                 }
