@@ -34,6 +34,10 @@ public class Isometric {
 
     private boolean itemsChanged;
 
+    private final Point observer = new Point(-10, -10, 20);
+
+    private final double[] observerVector = Vector3.fromTwoPoints(Point.ORIGIN, observer);
+
     public Isometric() {
         this.angle = Math.PI / 6;
         this.scale = 70;
@@ -52,7 +56,6 @@ public class Isometric {
         this.currentWidth = -1;
         this.currentHeight = -1;
         this.itemsChanged = true;
-
     }
 
     /**
@@ -244,7 +247,6 @@ public class Isometric {
         double[] v4 = Vector3.create();
         double[] v5 = Vector3.create();
         double[] v6 = Vector3.create();
-        Point observer = new Point(-10, -10, 20);
         int length = items.size();
         ArrayList<Item> sortedItems = new ArrayList<>(length);
         int[][] drawBefore = new int[length][];
@@ -265,7 +267,7 @@ public class Isometric {
                         itemA.deltaX, itemB.deltaX,
                         itemA.deltaY, itemB.deltaY,
                         itemA.r, itemB.r)) {
-                    int cmpPath = itemA.path.closerThan(itemB.path, observer, v1, v2, v3, v4, v5, v6);
+                    int cmpPath = itemA.path.closerThan(itemB.path, observerVector, v1, v2, v3, v4, v5, v6);
                     if (cmpPath < 0) {
                         oldArray = drawBefore[i];
                         oldLength = oldArray.length;
