@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
  * Created by fabianterhorst on 31.03.17.
  */
 
-@Deprecated
 public class Vector {
 
     protected double i, j, k;
