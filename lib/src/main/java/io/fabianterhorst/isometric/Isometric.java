@@ -244,12 +244,12 @@ public class Isometric {
         double[] v4 = Vector3.create();
         double[] v5 = Vector3.create();
         double[] v6 = Vector3.create();
-        ArrayList<Item> sortedItems = new ArrayList<>();
         Point observer = new Point(-10, -10, 20);
         int length = items.size();
-        List<List<Integer>> drawBefore = new ArrayList<>(length);
+        ArrayList<Item> sortedItems = new ArrayList<>(length);
+        int[][] drawBefore = new int[length][];
         for (int i = 0; i < length; i++) {
-            drawBefore.add(i, new ArrayList<Integer>());
+            drawBefore[i] = new int[0];
         }
         Item itemA;
         Item itemB;
@@ -264,25 +264,35 @@ public class Isometric {
                         itemA.r, itemB.r)) {
                     int cmpPath = itemA.path.closerThan(itemB.path, observer, v1, v2, v3, v4, v5, v6);
                     if (cmpPath < 0) {
-                        drawBefore.get(i).add(j);
+                        int[] oldArray = drawBefore[i];
+                        int oldLength = oldArray.length;
+                        int[] newDrawBefore = new int[oldLength + 1];
+                        System.arraycopy(oldArray, 0, newDrawBefore, 0, oldLength);
+                        newDrawBefore[oldLength] = j;
+                        drawBefore[i] = newDrawBefore;
                     } else if (cmpPath > 0) {
-                        drawBefore.get(j).add(i);
+                        int[] oldArray = drawBefore[j];
+                        int oldLength = oldArray.length;
+                        int[] newDrawBefore = new int[oldLength + 1];
+                        System.arraycopy(oldArray, 0, newDrawBefore, 0, oldLength);
+                        newDrawBefore[oldLength] = j;
+                        drawBefore[j] = newDrawBefore;
                     }
                 }
             }
         }
         int drawThisTurn = 1;
         Item currItem;
-        List<Integer> integers;
+        int[] integers;
         while (drawThisTurn == 1) {
             drawThisTurn = 0;
             for (int i = 0; i < length; i++) {
                 currItem = items.get(i);
-                integers = drawBefore.get(i);
+                integers = drawBefore[i];
                 if (currItem.drawn == 0) {
                     int canDraw = 1;
-                    for (int j = 0, lengthIntegers = integers.size(); j < lengthIntegers; j++) {
-                        if (items.get(integers.get(j)).drawn == 0) {
+                    for (int j = 0, lengthIntegers = integers.length; j < lengthIntegers; j++) {
+                        if (items.get(integers[j]).drawn == 0) {
                             canDraw = 0;
                             break;
                         }
