@@ -75,11 +75,16 @@ public class IsometricView extends View {
     }
 
     /**
-     * Items that need to be updated by the isometric library
+     * Use this to have the isometric library recalculate the paths of a provided list of items.
+     *
+     * Use this method when directly manipulating the items list returned by getCurrentItems().
+     * This is a potentially 'dangerous' action, because you need to consider when you are
+     * manipulating an item that is covered by another item.
      */
     public void updateItems(List<Isometric.Item> items) {
         if (items != null){
             this.isometric.updateItems(items, this.cull, this.boundsCheck);
+            invalidate();
         }
     }
 

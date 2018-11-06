@@ -94,7 +94,7 @@ public class Isometric {
 
     private void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, Color.transformColor(path, color), originalShape));
+        this.items.add(Item.createItem(path, color, originalShape));
     }
 
     public void measure(int width, int height, boolean sort, boolean cull, boolean boundsCheck) {
@@ -119,7 +119,13 @@ public class Isometric {
         }
     }
 
-    //allow user to recalculate only certain items
+    /**
+     * Use this to have the isometric library recalculate the paths of a provided list of items.
+     *
+     * Use this method when directly manipulating the items list returned by getCurrentItems().
+     * This is a potentially 'dangerous' action, because you need to consider when you are
+     * manipulating an item that is covered by another item.
+     */
     public void updateItems(List<Item> items, boolean cull, boolean boundsCheck) {
         //this.itemsChanged = true;
         //
@@ -240,7 +246,7 @@ public class Isometric {
                         }
                     }
                     if (canDraw == 1) {
-                        Item item = new Item(currItem);
+                        Item item = Item.copyItem(currItem);
                         sortedItems.add(item);
                         currItem.drawn = 1;
                         items.set(i, currItem);
@@ -253,7 +259,7 @@ public class Isometric {
         for (int i = 0; i < length; i++) {
             currItem = items.get(i);
             if (currItem.drawn == 0) {
-                sortedItems.add(new Item(currItem));
+                sortedItems.add(Item.copyItem(currItem));
             }
         }
         return sortedItems;
@@ -370,7 +376,7 @@ public class Isometric {
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
-        public Item(Item item) {
+        private Item(Item item) {
             this.transformedPoints = item.transformedPoints;
             this.drawPath = item.drawPath;
             this.drawn = item.drawn;
@@ -380,7 +386,7 @@ public class Isometric {
             this.originalShape = item.originalShape;
         }
 
-        public Item(Path path, Color baseColor, Shape originalShape) {
+        private Item(Path path, Color baseColor, Shape originalShape) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -390,6 +396,14 @@ public class Isometric {
             this.baseColor = baseColor;
             this.originalShape = originalShape;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
+        }
+
+        public static Item createItem(Path path, Color color, Shape originalShape){
+            return new Item(path, Color.transformColor(path, color), originalShape);
+        }
+
+        public static Item copyItem(Item oldItem){
+            return new Item(oldItem);
         }
 
         public Path getPath() {
