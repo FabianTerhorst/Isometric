@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -292,7 +293,9 @@ public class Isometric {
             Item item = reverseSort ? itr.previous() : itr.next();
 
             if (item.transformedPoints == null) continue;
-            List<Point> items = new ArrayList<>();
+            int initialSize = 4;
+            int itemSize = 0;
+            List<Point> items = new ArrayList<>(initialSize);
             Point top = null,
                     bottom = null,
                     left = null,
@@ -331,30 +334,39 @@ public class Isometric {
             items.add(top);
             items.add(right);
             items.add(bottom);
+            itemSize += 4;
 
             //search for equal points that are above or below for left and right or left and right for bottom and top
             for (Point point : item.transformedPoints) {
                 if (point.x == left.x) {
                     if (point.y != left.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.x == right.x) {
                     if (point.y != right.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.y == top.y) {
                     if (point.y != top.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.y == bottom.y) {
                     if (point.y != bottom.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
             }
+
+            //need to remove nulls if we never filled the initial capacity of the list
+            if (itemSize < initialSize)
+                items.removeAll(Collections.singleton(null));
 
             //perform one method of touch position lookup
             //it is faster to check the individual segments first (disabled by default).
