@@ -1,7 +1,5 @@
 package io.fabianterhorst.isometric;
 
-import java.util.Objects;
-
 /**
  * Created by fabianterhorst on 31.03.17.
  */

@@ -47,6 +47,6 @@ public class Vector {
         this.i = this.i / magnitude;
         this.j = this.j / magnitude;
         this.k = this.k / magnitude;
-        return this;//new Vector(this.i / magnitude, this.j / magnitude, this.k / magnitude);
+        return this;
     }
 }
