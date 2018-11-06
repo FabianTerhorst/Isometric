@@ -42,7 +42,7 @@ public class IntersectionUtils {
         return c;
     }
 
-    private static boolean isPointInPoly(Point[] poly, double x, double y) {
+    private static boolean isPointInPolyOriginal(Point[] poly, double x, double y) {
         boolean c = false;
         for (int i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
             if (((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y))
@@ -51,6 +51,49 @@ public class IntersectionUtils {
             }
         }
         return c;
+    }
+
+    private static boolean intersects(Point A, Point B, double PX, double PY) {
+        if (A.y > B.y)
+            return intersects(B, A, PX, PY);
+
+        if (PY == A.y || PY == B.y)
+            PY += 0.0001;
+
+        if (PY > B.y || PY < A.y || PX >= Math.max(A.x, B.x))
+            return false;
+
+        if (PX < Math.min(A.x, B.x))
+            return true;
+
+        double red = (PY - A.y) / (PX - A.x);
+        double blue = (B.y - A.y) / (B.x - A.x);
+        return red >= blue;
+    }
+
+    private static boolean isPointInPolyRaycast(Point[] shape, double pntX, double pntY) {
+        boolean inside = false;
+        int len = shape.length;
+        for (int i = 0; i < len; i++) {
+            if (intersects(shape[i], shape[(i + 1) % len], pntX, pntY))
+                inside = !inside;
+        }
+        return inside;
+    }
+
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    private static boolean isPointInPoly(Point[] polygon, double x, double y) {
+        boolean inside = false;
+        double xi, yi, xj, yj;
+        for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            xi = polygon[i].x;
+            yi = polygon[i].y;
+            xj = polygon[j].x;
+            yj = polygon[j].y;
+            if (((yi > y) != (yj > y))
+                    && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+        }
+        return inside;
     }
 
     public static boolean hasIntersection(Point[] pointsA, Point[] pointsB, Point[] polyA, Point[] polyB,
