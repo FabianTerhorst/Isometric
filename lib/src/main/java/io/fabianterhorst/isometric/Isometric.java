@@ -119,10 +119,17 @@ public class Isometric {
         }
     }
 
-    //allow user to recalculate only certain items
+    /**
+     * Use this to have the isometric library recalculate the paths of a provided list of items.
+     *
+     * Use this method when directly manipulating the items list returned by getCurrentItems().
+     * This is a potentially 'dangerous' action, because you need to consider when you are
+     * manipulating an item that is covered by another item.
+     */
     public void updateItems(List<Item> items, boolean cull, boolean boundsCheck) {
-        //only want to update these items instead of all items
         //this.itemsChanged = true;
+        //
+        // only want to update these items instead of all items
         transformItems(items, cull, boundsCheck);
     }
 
