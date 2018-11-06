@@ -121,8 +121,9 @@ public class Isometric {
 
     //allow user to recalculate only certain items
     public void updateItems(List<Item> items, boolean cull, boolean boundsCheck) {
-        //only want to update these items instead of all items
         //this.itemsChanged = true;
+        //
+        // only want to update these items instead of all items
         transformItems(items, cull, boundsCheck);
     }
 

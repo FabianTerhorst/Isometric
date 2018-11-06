@@ -74,7 +74,9 @@ public class IsometricView extends View {
         this.touchRadius = touchRadius;
     }
 
-    //allow user to set current items with the option to re-measure again or not
+    /**
+     * Items that need to be updated by the isometric library
+     */
     public void updateItems(List<Isometric.Item> items) {
         if (items != null){
             this.isometric.updateItems(items, this.cull, this.boundsCheck);
