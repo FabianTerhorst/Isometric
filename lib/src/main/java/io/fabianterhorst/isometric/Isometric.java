@@ -157,7 +157,7 @@ public class Isometric {
             //the if conditions here are ordered carefully to save computation, fail fast approach
             if ((cull && cullPath(item)) || (boundsCheck && !this.itemInDrawingBounds(item))) {
                 //the path is invisible. It does not need to be considered any more
-                this.items.remove(itemIndex);
+                items.remove(itemIndex);
                 itemSize--;
                 continue;
             }
