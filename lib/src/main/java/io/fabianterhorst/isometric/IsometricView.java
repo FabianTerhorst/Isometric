@@ -92,6 +92,18 @@ public class IsometricView extends View {
         return this.isometric.getCurrentItems();
     }
 
+    /**
+     * Get the drawing item associated with an x/y position
+     */
+    public Isometric.Item getItemForPosition(float x, float y){
+        return isometric.findItemForPosition(
+                new Point(x, y),
+                this.reverseSortForLookup,
+                this.touchRadiusLookup,
+                this.touchRadius
+        );
+    }
+
     public void setClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -144,12 +156,7 @@ public class IsometricView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                Isometric.Item item = isometric.findItemForPosition(
-                        new Point(event.getX(), event.getY()),
-                        this.reverseSortForLookup,
-                        this.touchRadiusLookup,
-                        this.touchRadius
-                );
+                Isometric.Item item = getItemForPosition(event.getX(), event.getY());
 
                 if (item != null) {
                     listener.onClick(item);
