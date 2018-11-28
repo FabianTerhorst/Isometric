@@ -39,11 +39,13 @@ public class Isometric {
         this.angle = Math.PI / 6;
         this.scale = 70;
         this.transformationIsoView = new double[][]{
-                //a                                 //c
-                { this.scale * Math.cos(this.angle), this.scale * Math.sin(this.angle) },
-                //b                                            //d
-                { this.scale * Math.cos(Math.PI - this.angle), this.scale * Math.sin(Math.PI - this.angle)}
-        };
+                {
+                        this.scale * Math.cos(this.angle),
+                        this.scale * Math.sin(this.angle)
+                },
+                {
+                        this.scale * Math.cos(Math.PI - this.angle),
+                        this.scale * Math.sin(Math.PI - this.angle)}};
         this.transformationViewIso = invertTransformationIsoView();
         this.currentWidth = -1;
         this.currentHeight = -1;
