@@ -92,6 +92,10 @@ public class IsometricView extends View {
         return this.isometric.getCurrentItems();
     }
 
+    /**
+     * Use this to get a reference to the current Isometric class
+     * Useful for coordinate transformations
+     */
     public Isometric getIsometric() {
         return isometric;
     }

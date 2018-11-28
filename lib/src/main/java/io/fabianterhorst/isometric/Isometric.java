@@ -71,8 +71,8 @@ public class Isometric {
 
         //preserving original format
         return new double[][]{
-                {d,-b},
-                {-c,a}
+                {d,-c},
+                {-b,a}
         };
     }
 
@@ -89,11 +89,11 @@ public class Isometric {
     }
 
     public Point translateViewToIsoPoint(Point point) {
+        //offset the origins added in translateIsoToViewPoint
         double workingX = point.getX() - this.originX;
         double workingY = -(point.getY() - this.originY);
 
         return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0],
-                //for the y coordinate, the subtractions are performed since you have to start at the bottom of the screen (max y) and subtract away
                 workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] + (point.z * this.scale));
     }
 
