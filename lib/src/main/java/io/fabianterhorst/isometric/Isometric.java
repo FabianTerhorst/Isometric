@@ -88,6 +88,8 @@ public class Isometric {
                 this.originY - point.x * this.transformationIsoView[0][1] - point.y * this.transformationIsoView[1][1] - (point.z * this.scale));
     }
 
+    //Currently the z coordinate cannot be calculated
+    //You can convert (x,y,z) to (x,y) but not (x,y) -> (x,y,z) because the z dimension is lost
     public Point translateViewToIsoPoint(Point point) {
         //offset the origins added in translateIsoToViewPoint
         double workingX = point.getX() - this.originX;
