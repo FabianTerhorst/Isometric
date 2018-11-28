@@ -92,6 +92,10 @@ public class IsometricView extends View {
         return this.isometric.getCurrentItems();
     }
 
+    public Isometric getIsometric() {
+        return isometric;
+    }
+
     /**
      * Get the drawing item associated with an x/y position
      */
