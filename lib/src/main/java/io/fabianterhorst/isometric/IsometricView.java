@@ -93,6 +93,14 @@ public class IsometricView extends View {
     }
 
     /**
+     * Use this to get a reference to the current Isometric class
+     * Useful for coordinate transformations
+     */
+    public Isometric getIsometric() {
+        return isometric;
+    }
+
+    /**
      * Get the drawing item associated with an x/y position
      */
     public Isometric.Item getItemForPosition(float x, float y){

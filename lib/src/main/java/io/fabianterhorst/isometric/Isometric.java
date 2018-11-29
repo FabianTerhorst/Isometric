@@ -18,7 +18,10 @@ public class Isometric {
 
     private final double angle, scale;
 
-    private double[][] transformation;
+    //Iso coords to View Coords
+    private double[][] transformationIsoView;
+    //View coords to Iso Coords
+    private double[][] transformationViewIso;
 
     private double originX, originY;
 
@@ -35,7 +38,7 @@ public class Isometric {
     public Isometric() {
         this.angle = Math.PI / 6;
         this.scale = 70;
-        this.transformation = new double[][]{
+        this.transformationIsoView = new double[][]{
                 {
                         this.scale * Math.cos(this.angle),
                         this.scale * Math.sin(this.angle)
@@ -43,10 +46,34 @@ public class Isometric {
                 {
                         this.scale * Math.cos(Math.PI - this.angle),
                         this.scale * Math.sin(Math.PI - this.angle)}};
+        this.transformationViewIso = invertTransformationIsoView();
         this.currentWidth = -1;
         this.currentHeight = -1;
         this.itemsChanged = true;
 
+    }
+
+    //https://www.mathsisfun.com/algebra/matrix-inverse.html
+    private double[][] invertTransformationIsoView() {
+        //these were determined from the current preset structure of transformationIsoView
+        //and usage in translateIsoToViewPoint
+        double a = this.transformationIsoView[0][0];
+        double b = this.transformationIsoView[1][0];
+        double c = this.transformationIsoView[0][1];
+        double d = this.transformationIsoView[1][1];
+
+        double determinant = a*d - b*c;
+
+        a = a/determinant;
+        b = b/determinant;
+        c = c/determinant;
+        d = d/determinant;
+
+        //preserving original format
+        return new double[][]{
+                {d,-c},
+                {-b,a}
+        };
     }
 
     /**
@@ -54,9 +81,30 @@ public class Isometric {
      * Y rides perpendicular to this angle (in isometric view: PI - angle)
      * Z affects the y coordinate of the drawn point
      */
-    public Point translatePoint(Point point) {
-        return new Point(this.originX + point.x * this.transformation[0][0] + point.y * this.transformation[1][0],
-                this.originY - point.x * this.transformation[0][1] - point.y * this.transformation[1][1] - (point.z * this.scale));
+    public Point translateIsoToViewPoint(Point point) {
+        //example of how this calculation is performed https://www.math.hmc.edu/calculus/tutorials/changebasis/
+        Point p = new Point(this.originX + point.x * this.transformationIsoView[0][0] + point.y * this.transformationIsoView[1][0],
+                //for the y coordinate, the subtractions are performed since you have to start at the bottom of the screen (max y) and subtract away
+                this.originY - point.x * this.transformationIsoView[0][1] - point.y * this.transformationIsoView[1][1] - (point.z * this.scale));
+                //normally unused, but the unconverted point is used in translateViewToIsoPoint
+        p.setLatentZ(point.getZ());
+        return p;
+    }
+
+    /**
+     * X rides along the top of the view
+     * Y rides perpendicular to this on the left side of the view
+     *
+     * Currently the z coordinate cannot be calculated
+     * You can convert (x,y,z) to (x,y) but not (x,y) -> (x,y,z) because the z dimension is lost
+     */
+    public Point translateViewToIsoPoint(Point point) {
+        //offset the origins added in translateIsoToViewPoint
+        double workingX = point.getX() - this.originX;
+        double workingY = -(point.getY() - this.originY);
+
+        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0] - point.getLatentZ(),
+                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] -point.getLatentZ());
     }
 
     public void add(Path path, Color color) {
@@ -150,7 +198,7 @@ public class Isometric {
             Point point;
             for (int i = 0, length = item.path.points.length; i < length; i++) {
                 point = item.path.points[i];
-                item.transformedPoints[i] = translatePoint(point);
+                item.transformedPoints[i] = translateIsoToViewPoint(point);
             }
 
             //remove item if not in view

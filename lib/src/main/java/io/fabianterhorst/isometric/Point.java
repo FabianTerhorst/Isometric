@@ -11,6 +11,8 @@ public class Point {
     public static final Point ORIGIN = new Point(0, 0, 0);
 
     protected double x, y, z;
+    //Wrapper class used to allow for null type
+    protected Double latentZ = null;
 
     Point() {
 
@@ -37,6 +39,14 @@ public class Point {
 
     public double getZ() {
         return z;
+    }
+
+    public void setLatentZ(Double latentZ) {
+        this.latentZ = latentZ;
+    }
+
+    public Double getLatentZ() {
+        return latentZ;
     }
 
     /**
