@@ -60,8 +60,6 @@ public class Isometric {
         double a = this.transformationIsoView[0][0];
         double b = this.transformationIsoView[1][0];
         double c = this.transformationIsoView[0][1];
-//        double b = this.transformationIsoView[1][0];
-//        double c = this.transformationIsoView[0][1];
         double d = this.transformationIsoView[1][1];
 
         double determinant = a*d - b*c;
@@ -85,20 +83,28 @@ public class Isometric {
      */
     public Point translateIsoToViewPoint(Point point) {
         //example of how this calculation is performed https://www.math.hmc.edu/calculus/tutorials/changebasis/
-        return new Point(this.originX + point.x * this.transformationIsoView[0][0] + point.y * this.transformationIsoView[1][0],
+        Point p = new Point(this.originX + point.x * this.transformationIsoView[0][0] + point.y * this.transformationIsoView[1][0],
                 //for the y coordinate, the subtractions are performed since you have to start at the bottom of the screen (max y) and subtract away
                 this.originY - point.x * this.transformationIsoView[0][1] - point.y * this.transformationIsoView[1][1] - (point.z * this.scale));
+                //normally unused, but the unconverted point is used in translateViewToIsoPoint
+        p.setLatentZ(point.getZ());
+        return p;
     }
 
-    //Currently the z coordinate cannot be calculated
-    //You can convert (x,y,z) to (x,y) but not (x,y) -> (x,y,z) because the z dimension is lost
+    /**
+     * X rides along the top of the view
+     * Y rides perpendicular to this on the left side of the view
+     *
+     * Currently the z coordinate cannot be calculated
+     * You can convert (x,y,z) to (x,y) but not (x,y) -> (x,y,z) because the z dimension is lost
+     */
     public Point translateViewToIsoPoint(Point point) {
         //offset the origins added in translateIsoToViewPoint
         double workingX = point.getX() - this.originX;
         double workingY = -(point.getY() - this.originY);
 
-        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0],
-                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] + (point.z * this.scale));
+        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0] - point.getLatentZ(),
+                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] -point.getLatentZ());
     }
 
     public void add(Path path, Color color) {
