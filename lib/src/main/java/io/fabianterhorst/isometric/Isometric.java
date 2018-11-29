@@ -102,9 +102,10 @@ public class Isometric {
         //offset the origins added in translateIsoToViewPoint
         double workingX = point.getX() - this.originX;
         double workingY = -(point.getY() - this.originY);
+        double latentZ = point.getLatentZ() == null ? 0 : point.getLatentZ();
 
-        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0] - point.getLatentZ(),
-                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] -point.getLatentZ());
+        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0] - latentZ,
+                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] - latentZ);
     }
 
     public void add(Path path, Color color) {
