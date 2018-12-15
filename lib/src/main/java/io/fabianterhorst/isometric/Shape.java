@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Shape {
 
-    private Path[] paths;
+    protected Path[] paths;
 
     public Shape() {
     }

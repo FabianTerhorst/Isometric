@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Path {
 
-    Point[] points;
+    protected Point[] points;
 
     public Path() {
     }
@@ -39,14 +39,14 @@ public class Path {
         return anotherArray;
     }
 
-    private static Point[] concat(Point[] a, Point[] b) {
+    protected static Point[] concat(Point[] a, Point[] b) {
         Point[] c = new Point[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
         return c;
     }
 
-    private static Point[] reverseArray(Point[] array) {
+    protected static Point[] reverseArray(Point[] array) {
         if (array.length == 0) {
             return new Point[]{};
         } else if (array.length == 1) {
