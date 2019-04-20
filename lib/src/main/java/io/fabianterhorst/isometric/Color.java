@@ -8,6 +8,8 @@ public class Color {
 
     protected double r, g, b, a, h, s, l;
 
+    private static final double colorDifference = 0.20;
+
     public Color(double r, double g, double b, double a) {
         this.r = r;
         this.g = g;
@@ -52,6 +54,38 @@ public class Color {
         this.h = h;
         this.s = s;
         this.l = l;
+    }
+
+    /*private Color transformColor(Path path, Color color) {
+        Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
+        Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
+
+        Vector normal = Vector.crossProduct(v1, v2).normalize();
+
+        double brightness = Vector.dotProduct(normal, this.lightAngle);
+        return color.lighten(brightness * this.colorDifference, this.lightColor);
+    }*/
+
+    public static Color transformColor(Path path, Color color) {
+        Point p1 = path.points[1];
+        Point p2 = path.points[0];
+        double i = p2.x - p1.x;
+        double j = p2.y - p1.y;
+        double k = p2.z - p1.z;
+        p1 = path.points[2];
+        p2 = path.points[1];
+        double i2 = p2.x - p1.x;
+        double j2 = p2.y - p1.y;
+        double k2 = p2.z - p1.z;
+        double i3 = j * k2 - j2 * k;
+        double j3 = -1 * (i * k2 - i2 * k);
+        double k3 = i * j2 - i2 * j;
+        double magnitude = Math.sqrt(i3 * i3 + j3 * j3 + k3 * k3);
+        i = magnitude == 0 ? 0 : i3 / magnitude;
+        j = magnitude == 0 ? 0 : j3 / magnitude;
+        k = magnitude == 0 ? 0 : k3 / magnitude;
+        double brightness = i * Isometric.lightAngle.i + j * Isometric.lightAngle.j + k * Isometric.lightAngle.k;
+        return color.lighten(brightness * colorDifference, Isometric.lightColor);
     }
 
     private double min(double a, double b, double c) {
@@ -106,4 +140,28 @@ public class Color {
         return p;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Color)) return false;
+        Color color = (Color) o;
+        return Double.compare(color.r, r) == 0 &&
+                Double.compare(color.g, g) == 0 &&
+                Double.compare(color.b, b) == 0 &&
+                Double.compare(color.a, a) == 0 &&
+                Double.compare(color.h, h) == 0 &&
+                Double.compare(color.s, s) == 0 &&
+                Double.compare(color.l, l) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return  Double.valueOf(r).hashCode() ^
+                Double.valueOf(g).hashCode() ^
+                Double.valueOf(b).hashCode() ^
+                Double.valueOf(a).hashCode() ^
+                Double.valueOf(h).hashCode() ^
+                Double.valueOf(s).hashCode() ^
+                Double.valueOf(l).hashCode();
+    }
 }

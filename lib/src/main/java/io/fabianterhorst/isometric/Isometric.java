@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -17,26 +18,27 @@ public class Isometric {
 
     private final double angle, scale;
 
-    private double[][] transformation;
+    //Iso coords to View Coords
+    private double[][] transformationIsoView;
+    //View coords to Iso Coords
+    private double[][] transformationViewIso;
 
     private double originX, originY;
 
     private List<Item> items = new ArrayList<>();
 
-    private final Vector lightAngle;
+    static final Vector lightAngle = new Vector(2, -1, 3).normalize();
 
-    private final double colorDifference;
-
-    private final Color lightColor;
+    static final Color lightColor = new Color(255, 255, 255);
 
     private int currentWidth, currentHeight;
 
-    private boolean itemsChanged;
+    protected boolean itemsChanged;
 
     public Isometric() {
         this.angle = Math.PI / 6;
         this.scale = 70;
-        this.transformation = new double[][]{
+        this.transformationIsoView = new double[][]{
                 {
                         this.scale * Math.cos(this.angle),
                         this.scale * Math.sin(this.angle)
@@ -44,14 +46,34 @@ public class Isometric {
                 {
                         this.scale * Math.cos(Math.PI - this.angle),
                         this.scale * Math.sin(Math.PI - this.angle)}};
-        Vector lightPosition = new Vector(2, -1, 3);
-        this.lightAngle = lightPosition.normalize();
-        this.colorDifference = 0.20;
-        this.lightColor = new Color(255, 255, 255);
+        this.transformationViewIso = invertTransformationIsoView();
         this.currentWidth = -1;
         this.currentHeight = -1;
         this.itemsChanged = true;
 
+    }
+
+    //https://www.mathsisfun.com/algebra/matrix-inverse.html
+    private double[][] invertTransformationIsoView() {
+        //these were determined from the current preset structure of transformationIsoView
+        //and usage in translateIsoToViewPoint
+        double a = this.transformationIsoView[0][0];
+        double b = this.transformationIsoView[1][0];
+        double c = this.transformationIsoView[0][1];
+        double d = this.transformationIsoView[1][1];
+
+        double determinant = a*d - b*c;
+
+        a = a/determinant;
+        b = b/determinant;
+        c = c/determinant;
+        d = d/determinant;
+
+        //preserving original format
+        return new double[][]{
+                {d,-c},
+                {-b,a}
+        };
     }
 
     /**
@@ -59,9 +81,31 @@ public class Isometric {
      * Y rides perpendicular to this angle (in isometric view: PI - angle)
      * Z affects the y coordinate of the drawn point
      */
-    public Point translatePoint(Point point) {
-        return new Point(this.originX + point.x * this.transformation[0][0] + point.y * this.transformation[1][0],
-                this.originY - point.x * this.transformation[0][1] - point.y * this.transformation[1][1] - (point.z * this.scale));
+    public Point translateIsoToViewPoint(Point point) {
+        //example of how this calculation is performed https://www.math.hmc.edu/calculus/tutorials/changebasis/
+        Point p = new Point(this.originX + point.x * this.transformationIsoView[0][0] + point.y * this.transformationIsoView[1][0],
+                //for the y coordinate, the subtractions are performed since you have to start at the bottom of the screen (max y) and subtract away
+                this.originY - point.x * this.transformationIsoView[0][1] - point.y * this.transformationIsoView[1][1] - (point.z * this.scale));
+                //normally unused, but the unconverted point is used in translateViewToIsoPoint
+        p.setLatentZ(point.getZ());
+        return p;
+    }
+
+    /**
+     * X rides along the top of the view
+     * Y rides perpendicular to this on the left side of the view
+     *
+     * Currently the z coordinate cannot be calculated
+     * You can convert (x,y,z) to (x,y) but not (x,y) -> (x,y,z) because the z dimension is lost
+     */
+    public Point translateViewToIsoPoint(Point point) {
+        //offset the origins added in translateIsoToViewPoint
+        double workingX = point.getX() - this.originX;
+        double workingY = -(point.getY() - this.originY);
+        double latentZ = point.getLatentZ() == null ? 0 : point.getLatentZ();
+
+        return new Point(workingX * this.transformationViewIso[0][0] + workingY * this.transformationViewIso[1][0] - latentZ,
+                workingX * this.transformationViewIso[0][1] + workingY * this.transformationViewIso[1][1] - latentZ);
     }
 
     public void add(Path path, Color color) {
@@ -95,44 +139,12 @@ public class Isometric {
 
     public void clear() {
         this.itemsChanged = true;
-        items.clear();
+        getCurrentItems().clear();
     }
 
-    private void addPath(Path path, Color color, Shape originalShape) {
+    protected void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(new Item(path, transformColor(path, color), originalShape));
-    }
-
-    /*private Color transformColor(Path path, Color color) {
-        Vector v1 = Vector.fromTwoPoints(path.points[1], path.points[0]);
-        Vector v2 = Vector.fromTwoPoints(path.points[2], path.points[1]);
-
-        Vector normal = Vector.crossProduct(v1, v2).normalize();
-
-        double brightness = Vector.dotProduct(normal, this.lightAngle);
-        return color.lighten(brightness * this.colorDifference, this.lightColor);
-    }*/
-
-    private Color transformColor(Path path, Color color) {
-        Point p1 = path.points[1];
-        Point p2 = path.points[0];
-        double i = p2.x - p1.x;
-        double j = p2.y - p1.y;
-        double k = p2.z - p1.z;
-        p1 = path.points[2];
-        p2 = path.points[1];
-        double i2 = p2.x - p1.x;
-        double j2 = p2.y - p1.y;
-        double k2 = p2.z - p1.z;
-        double i3 = j * k2 - j2 * k;
-        double j3 = -1 * (i * k2 - i2 * k);
-        double k3 = i * j2 - i2 * j;
-        double magnitude = Math.sqrt(i3 * i3 + j3 * j3 + k3 * k3);
-        i = magnitude == 0 ? 0 : i3 / magnitude;
-        j = magnitude == 0 ? 0 : j3 / magnitude;
-        k = magnitude == 0 ? 0 : k3 / magnitude;
-        double brightness = i * lightAngle.i + j * lightAngle.j + k * lightAngle.k;
-        return color.lighten(brightness * this.colorDifference, this.lightColor);
+        getCurrentItems().add(Item.createItem(path, color, originalShape));
     }
 
     public void measure(int width, int height, boolean sort, boolean cull, boolean boundsCheck) {
@@ -150,6 +162,30 @@ public class Isometric {
         this.originX = width / 2;
         this.originY = height * 0.9;
 
+        transformItems(getCurrentItems(), cull, boundsCheck);
+
+        if (sort) {
+			setCurrentItems(sortPaths());
+        }
+    }
+
+    /**
+     * Use this to have the isometric library recalculate the paths of a provided list of items.
+     *
+     * Use this method when directly manipulating the items list returned by getCurrentItems().
+     * This is a potentially 'dangerous' action, because you need to consider when you are
+     * manipulating an item that is covered by another item.
+     */
+    public void updateItems(List<Item> items, boolean cull, boolean boundsCheck) {
+        //this.itemsChanged = true;
+        //
+        // only want to update these items instead of all items
+        transformItems(items, cull, boundsCheck);
+    }
+
+    //allow user to update particular items
+    public void transformItems(List<Item> items, boolean cull, boolean boundsCheck) {
+
         int itemIndex = 0, itemSize = items.size();
         while (itemIndex < itemSize) {
             Item item = items.get(itemIndex);
@@ -163,14 +199,14 @@ public class Isometric {
             Point point;
             for (int i = 0, length = item.path.points.length; i < length; i++) {
                 point = item.path.points[i];
-                item.transformedPoints[i] = translatePoint(point);
+                item.transformedPoints[i] = translateIsoToViewPoint(point);
             }
 
             //remove item if not in view
             //the if conditions here are ordered carefully to save computation, fail fast approach
             if ((cull && cullPath(item)) || (boundsCheck && !this.itemInDrawingBounds(item))) {
                 //the path is invisible. It does not need to be considered any more
-                this.items.remove(itemIndex);
+                items.remove(itemIndex);
                 itemSize--;
                 continue;
             }
@@ -187,10 +223,14 @@ public class Isometric {
 
             item.drawPath.close();
         }
+    }
 
-        if (sort) {
-            this.items = sortPaths();
-        }
+    public List<Item> getCurrentItems() {
+        return this.items;
+    }
+	
+    public void setCurrentItems(List<Item> items) {
+        this.items = items;
     }
 
     private boolean cullPath(Item item) {
@@ -260,7 +300,7 @@ public class Isometric {
                         }
                     }
                     if (canDraw == 1) {
-                        Item item = new Item(currItem);
+                        Item item = Item.copyItem(currItem);
                         sortedItems.add(item);
                         currItem.drawn = 1;
                         items.set(i, currItem);
@@ -273,7 +313,7 @@ public class Isometric {
         for (int i = 0; i < length; i++) {
             currItem = items.get(i);
             if (currItem.drawn == 0) {
-                sortedItems.add(new Item(currItem));
+                sortedItems.add(Item.copyItem(currItem));
             }
         }
         return sortedItems;
@@ -298,7 +338,7 @@ public class Isometric {
         //get iterator for the items list, and start either at the front or back
         //The items are already sorted back-to-front, by iterating the items list backwards
         //you check the items closer to the user first
-        ListIterator<Item> itr = this.items.listIterator(reverseSort ? this.items.size() : 0);
+        ListIterator<Item> itr = getCurrentItems().listIterator(reverseSort ? getCurrentItems().size() : 0);
 
         //Items are already sorted for depth sort so break should not be a problem here
         //iterate through the list in one direction or the other
@@ -306,7 +346,9 @@ public class Isometric {
             Item item = reverseSort ? itr.previous() : itr.next();
 
             if (item.transformedPoints == null) continue;
-            List<Point> items = new ArrayList<>();
+            int initialSize = 4;
+            int itemSize = 0;
+            List<Point> items = new ArrayList<>(initialSize);
             Point top = null,
                     bottom = null,
                     left = null,
@@ -345,30 +387,39 @@ public class Isometric {
             items.add(top);
             items.add(right);
             items.add(bottom);
+            itemSize += 4;
 
             //search for equal points that are above or below for left and right or left and right for bottom and top
             for (Point point : item.transformedPoints) {
                 if (point.x == left.x) {
                     if (point.y != left.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.x == right.x) {
                     if (point.y != right.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.y == top.y) {
                     if (point.y != top.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
                 if (point.y == bottom.y) {
                     if (point.y != bottom.y) {
                         items.add(point);
+                        itemSize++;
                     }
                 }
             }
+
+            //need to remove nulls if we never filled the initial capacity of the list
+            if (itemSize < initialSize)
+                items.removeAll(Collections.singleton(null));
 
             //perform one method of touch position lookup
             //it is faster to check the individual segments first (disabled by default).
@@ -390,7 +441,7 @@ public class Isometric {
         Point[] transformedPoints;
         android.graphics.Path drawPath;
 
-        Item(Item item) {
+        private Item(Item item) {
             this.transformedPoints = item.transformedPoints;
             this.drawPath = item.drawPath;
             this.drawn = item.drawn;
@@ -400,7 +451,7 @@ public class Isometric {
             this.originalShape = item.originalShape;
         }
 
-        Item(Path path, Color baseColor, Shape originalShape) {
+        private Item(Path path, Color baseColor, Shape originalShape) {
             this.drawPath = new android.graphics.Path();
             this.drawn = 0;
             this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -410,6 +461,14 @@ public class Isometric {
             this.baseColor = baseColor;
             this.originalShape = originalShape;
             this.paint.setColor(android.graphics.Color.argb((int) baseColor.a, (int) baseColor.r, (int) baseColor.g, (int) baseColor.b));
+        }
+
+        public static Item createItem(Path path, Color color, Shape originalShape){
+            return new Item(path, Color.transformColor(path, color), originalShape);
+        }
+
+        public static Item copyItem(Item oldItem){
+            return new Item(oldItem);
         }
 
         public Path getPath() {

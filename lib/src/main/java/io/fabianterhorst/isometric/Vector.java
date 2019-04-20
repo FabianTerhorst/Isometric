@@ -16,6 +16,18 @@ public class Vector {
         this.k = k;
     }
 
+    public double getX() {
+        return i;
+    }
+
+    public double getY() {
+        return j;
+    }
+
+    public double getZ() {
+        return k;
+    }
+
     @NonNull
     public static Vector fromTwoPoints(Point p1, Point p2) {
         return new Vector(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
@@ -34,8 +46,19 @@ public class Vector {
         return v1.i * v2.i + v1.j * v2.j + v1.k * v2.k;
     }
 
+    public static Vector project(Vector v1, Vector v2){
+        double mag = v2.magnitude();
+        double mult = Vector.dotProduct(v1, v2)/(mag*mag);
+        return v2.multiply(mult);
+    }
+
     public double magnitude() {
         return Math.sqrt(this.i * this.i + this.j * this.j + this.k * this.k);
+    }
+
+    //can be used for division too
+    public Vector multiply(double a){
+        return new Vector(this.i * a, this.j * a, this.k * a);
     }
 
     public Vector normalize() {

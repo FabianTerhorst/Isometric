@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.List;
+
 /**
  * Created by fabianterhorst on 31.03.17.
  */
@@ -18,7 +20,7 @@ public class IsometricView extends View {
         void onClick(@NonNull Isometric.Item item);
     }
 
-    private final Isometric isometric = new Isometric();
+    private final Isometric isometric = getIsometricInstance();
 
     private OnItemClickListener listener;
 
@@ -72,9 +74,51 @@ public class IsometricView extends View {
         this.touchRadius = touchRadius;
     }
 
+    /**
+     * Use this to have the isometric library recalculate the paths of a provided list of items.
+     *
+     * Use this method when directly manipulating the items list returned by getCurrentItems().
+     * This is a potentially 'dangerous' action, because you need to consider when you are
+     * manipulating an item that is covered by another item.
+     */
+    public void updateItems(List<Isometric.Item> items) {
+        if (items != null){
+            this.isometric.updateItems(items, this.cull, this.boundsCheck);
+            invalidate();
+        }
+    }
+
+    public List<Isometric.Item> getCurrentItems() {
+        return this.isometric.getCurrentItems();
+    }
+
+    /**
+     * Use this to get a reference to the current Isometric class
+     * Useful for coordinate transformations
+     */
+    public Isometric getIsometric() {
+        return isometric;
+    }
+
+    /**
+     * Get the drawing item associated with an x/y position
+     */
+    public Isometric.Item getItemForPosition(float x, float y){
+        return isometric.findItemForPosition(
+                new Point(x, y),
+                this.reverseSortForLookup,
+                this.touchRadiusLookup,
+                this.touchRadius
+        );
+    }
+
     public void setClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
+	
+	protected Isometric getIsometricInstance(){
+		return new Isometric();
+	}
 
     public void clear() {
         isometric.clear();
@@ -124,12 +168,7 @@ public class IsometricView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                Isometric.Item item = isometric.findItemForPosition(
-                        new Point(event.getX(), event.getY()),
-                        this.reverseSortForLookup,
-                        this.touchRadiusLookup,
-                        this.touchRadius
-                );
+                Isometric.Item item = getItemForPosition(event.getX(), event.getY());
 
                 if (item != null) {
                     listener.onClick(item);
