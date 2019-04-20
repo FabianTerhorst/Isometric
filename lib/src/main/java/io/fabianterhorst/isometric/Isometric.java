@@ -33,7 +33,7 @@ public class Isometric {
 
     private int currentWidth, currentHeight;
 
-    private boolean itemsChanged;
+    protected boolean itemsChanged;
 
     public Isometric() {
         this.angle = Math.PI / 6;
