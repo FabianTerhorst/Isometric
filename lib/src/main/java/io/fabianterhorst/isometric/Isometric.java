@@ -139,12 +139,12 @@ public class Isometric {
 
     public void clear() {
         this.itemsChanged = true;
-        this.items.clear();
+        getCurrentItems().clear();
     }
 
     protected void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
-        this.items.add(Item.createItem(path, color, originalShape));
+        getCurrentItems().add(Item.createItem(path, color, originalShape));
     }
 
     public void measure(int width, int height, boolean sort, boolean cull, boolean boundsCheck) {
@@ -162,10 +162,10 @@ public class Isometric {
         this.originX = width / 2;
         this.originY = height * 0.9;
 
-        transformItems(this.items, cull, boundsCheck);
+        transformItems(getCurrentItems(), cull, boundsCheck);
 
         if (sort) {
-            this.items = sortPaths();
+			setCurrentItems(sortPaths());
         }
     }
 
@@ -227,6 +227,10 @@ public class Isometric {
 
     public List<Item> getCurrentItems() {
         return this.items;
+    }
+	
+    public void setCurrentItems(List<Item> items) {
+        this.items = items;
     }
 
     private boolean cullPath(Item item) {
@@ -334,7 +338,7 @@ public class Isometric {
         //get iterator for the items list, and start either at the front or back
         //The items are already sorted back-to-front, by iterating the items list backwards
         //you check the items closer to the user first
-        ListIterator<Item> itr = this.items.listIterator(reverseSort ? this.items.size() : 0);
+        ListIterator<Item> itr = getCurrentItems().listIterator(reverseSort ? getCurrentItems().size() : 0);
 
         //Items are already sorted for depth sort so break should not be a problem here
         //iterate through the list in one direction or the other
