@@ -20,7 +20,7 @@ public class IsometricView extends View {
         void onClick(@NonNull Isometric.Item item);
     }
 
-    private final Isometric isometric = new Isometric();
+    private final Isometric isometric = getIsometricInstance();
 
     private OnItemClickListener listener;
 
@@ -115,6 +115,10 @@ public class IsometricView extends View {
     public void setClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
+	
+	protected Isometric getIsometricInstance(){
+		return new Isometric();
+	}
 
     public void clear() {
         isometric.clear();
