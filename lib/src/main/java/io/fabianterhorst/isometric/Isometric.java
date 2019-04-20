@@ -142,7 +142,7 @@ public class Isometric {
         this.items.clear();
     }
 
-    private void addPath(Path path, Color color, Shape originalShape) {
+    protected void addPath(Path path, Color color, Shape originalShape) {
         this.itemsChanged = true;
         this.items.add(Item.createItem(path, color, originalShape));
     }
